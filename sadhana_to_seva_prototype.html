@@ -307,7 +307,7 @@
 
         <h3 class="text-lg font-bold tracking-tight text-black mb-1">Share Your Stillness</h3>
         <p class="text-xs text-neutral-600 mb-5 max-w-[240px]">
-          Send a silent wave of blessings to <span class="font-semibold text-black">Abhijeet &amp; Rick</span> in your Course Sangha.
+          Send a silent wave of blessings to <span class="font-semibold text-black">Abhijeet &amp; Rick</span> in AOL Hackathon &#39;26.
         </p>
 
         <!-- Primary Send Blessings Action -->
@@ -375,6 +375,85 @@
     </div>
 
     <!-- Top Toast Notification Area (Inside Mobile Frame) -->
+    <!-- JOIN FLOW: Sangha Code -> About You -> Seva Profile -->
+    <div id="onboarding" class="hidden absolute inset-0 z-[60] overflow-y-auto flex flex-col" style="background-color: var(--app-bg);" role="dialog" aria-modal="true" aria-label="Join your Sangha">
+      <div class="px-5 pt-6 pb-3">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold">Join Sadhana to Seva</span>
+          <span id="ob-step-label" class="text-[10px] font-mono-tech font-bold text-black">Step 1 of 3</span>
+        </div>
+        <div class="grid grid-cols-3 gap-1.5" aria-hidden="true">
+          <div id="ob-seg-1" class="h-1.5 rounded-full bg-black"></div>
+          <div id="ob-seg-2" class="h-1.5 rounded-full bg-neutral-200"></div>
+          <div id="ob-seg-3" class="h-1.5 rounded-full bg-neutral-200"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: SANGHA CODE -->
+      <form id="ob-step-1" class="flex-1 px-5 pb-6 flex flex-col" onsubmit="obSubmitCode(event)" novalidate>
+        <div class="flex-1 flex flex-col justify-center">
+          <div class="w-12 h-12 rounded-2xl border-2 border-black bg-white flex items-center justify-center text-2xl mb-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">🪷</div>
+          <h1 class="text-xl font-bold tracking-tight text-black mb-1">Join your Sangha</h1>
+          <p class="text-xs text-neutral-600 mb-5 max-w-[280px]">Enter the code from your course teacher or organizer to find your circle of 7.</p>
+          <label for="ob-code" class="block text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold mb-1">Sangha Code</label>
+          <input id="ob-code" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" maxlength="8" placeholder="WPCI"
+            class="w-full px-4 py-3 text-2xl font-mono-tech font-bold tracking-[0.3em] uppercase text-center border-2 border-black rounded-2xl bg-white text-black placeholder:text-neutral-300 focus:outline-none" aria-describedby="ob-code-msg" />
+          <p id="ob-code-msg" class="text-[11px] mt-2 min-h-[16px] text-neutral-500" aria-live="polite">Demo: any 4 to 8 letters or numbers works, for example WPCI.</p>
+        </div>
+        <button type="submit" class="wf-btn w-full py-3.5 rounded-xl bg-black text-white font-semibold text-sm shadow-[4px_4px_0px_0px_rgba(161,161,170,1)] active:shadow-none">Continue</button>
+      </form>
+
+      <!-- STEP 2: ABOUT YOU -->
+      <form id="ob-step-2" class="hidden flex-1 px-5 pb-6 flex-col" onsubmit="obSubmitDetails(event)" novalidate>
+        <div class="flex-1 flex flex-col justify-center">
+          <p id="ob-joined-pill" class="self-start text-[10px] font-mono-tech uppercase font-bold px-2 py-0.5 border border-black rounded-full bg-white text-black mb-3">Sangha WPCI</p>
+          <h1 class="text-xl font-bold tracking-tight text-black mb-1">About you</h1>
+          <p class="text-xs text-neutral-600 mb-5 max-w-[280px]">Your Sangha will see your first name.</p>
+          <label for="ob-name" class="block text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold mb-1">Name</label>
+          <input id="ob-name" type="text" autocomplete="given-name" maxlength="30" placeholder="Erik"
+            class="w-full px-3 py-2.5 text-sm border border-black rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none mb-1" aria-describedby="ob-name-msg" />
+          <p id="ob-name-msg" class="text-[11px] min-h-[16px] mb-2 text-neutral-500" aria-live="polite"></p>
+          <label for="ob-email" class="block text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold mb-1">Email</label>
+          <input id="ob-email" type="email" autocomplete="email" maxlength="80" placeholder="erik@example.com"
+            class="w-full px-3 py-2.5 text-sm border border-black rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none mb-1" aria-describedby="ob-email-msg" />
+          <p id="ob-email-msg" class="text-[11px] min-h-[16px] mb-2 text-neutral-500" aria-live="polite"></p>
+          <label for="ob-phone" class="block text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold mb-1">Phone number <span class="normal-case tracking-normal font-normal">(optional)</span></label>
+          <input id="ob-phone" type="tel" autocomplete="tel" maxlength="20" placeholder="+1 604 555 0123"
+            class="w-full px-3 py-2.5 text-sm border border-black rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none mb-1" aria-describedby="ob-phone-msg" />
+          <p id="ob-phone-msg" class="text-[11px] min-h-[16px] text-neutral-500" aria-live="polite">Only volunteer coordinators see your email and phone, to reach you about Seva. They are never shown to your Sangha.</p>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" onclick="obGoStep(1)" class="wf-btn px-4 py-3.5 rounded-xl border border-black bg-white text-black font-semibold text-sm">Back</button>
+          <button type="submit" class="wf-btn flex-1 py-3.5 rounded-xl bg-black text-white font-semibold text-sm shadow-[4px_4px_0px_0px_rgba(161,161,170,1)] active:shadow-none">Continue</button>
+        </div>
+      </form>
+
+      <!-- STEP 3: SEVA PROFILE -->
+      <div id="ob-step-3" class="hidden flex-1 px-5 pb-6 flex-col">
+        <div class="flex-1">
+          <h1 class="text-xl font-bold tracking-tight text-black mb-1">Your Seva Profile</h1>
+          <p class="text-xs text-neutral-600 mb-3">Pick at least one way you would love to serve. You can change this any time.</p>
+          <div class="flex items-baseline justify-between mb-1.5">
+            <span class="text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold">Seva Skills</span>
+            <span id="ob-selected-count" class="text-xs font-mono-tech font-bold text-black">0 Selected</span>
+          </div>
+          <div id="ob-skills-grid" class="grid grid-cols-1 gap-1.5"></div>
+          <div id="ob-other-wrapper" class="hidden mt-2.5">
+            <label for="ob-other-input" class="block text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold mb-1">Specify Other Seva</label>
+            <input id="ob-other-input" type="text" maxlength="60" placeholder="e.g., Photography, Rides, Decoration..." oninput="updateOtherSevaText(this.value)"
+              class="w-full px-3 py-2 text-xs border border-black rounded-xl bg-white text-black placeholder:text-neutral-400 focus:outline-none" />
+          </div>
+        </div>
+        <div class="pt-4">
+          <div class="flex gap-2">
+            <button type="button" onclick="obGoStep(2)" class="wf-btn px-4 py-3.5 rounded-xl border border-black bg-white text-black font-semibold text-sm">Back</button>
+            <button type="button" onclick="obFinish()" class="wf-btn flex-1 py-3.5 rounded-xl bg-black text-white font-semibold text-sm shadow-[4px_4px_0px_0px_rgba(161,161,170,1)] active:shadow-none">Join Sangha</button>
+          </div>
+          <p id="ob-skills-msg" class="text-[11px] mt-2 min-h-[16px] text-center text-neutral-500" aria-live="polite">Choose at least one way to serve to finish.</p>
+        </div>
+      </div>
+    </div>
+
     <div id="toast-container" class="pointer-events-none absolute top-16 left-4 right-4 z-50 flex flex-col items-center gap-2"></div>
 
     <!-- Full-Screen Emoji Propagation Layer (Above modals so blessings radiate across entire app) -->
@@ -399,7 +478,7 @@
           <!-- Sangha Pill -->
           <div class="border border-black rounded-full px-2.5 py-1 flex items-center gap-1.5 bg-neutral-50">
             <span class="w-2 h-2 rounded-full" style="background-color: #C84B1C;"></span>
-            <span class="text-xs font-medium text-black">Course Sangha</span>
+            <span class="text-xs font-medium text-black">AOL Hackathon &#39;26</span>
           </div>
         </div>
 
@@ -665,16 +744,16 @@
         <!-- 1. COMPACT PROFILE HEADER -->
         <section aria-label="Volunteer Profile" class="border-2 border-black rounded-2xl px-3.5 py-2.5 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div class="flex items-center gap-2.5 min-w-0">
-            <div class="w-8 h-8 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center shrink-0">
+            <div id="profile-avatar" class="w-8 h-8 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center shrink-0">
               E
             </div>
             <div class="flex items-center gap-1.5 min-w-0 flex-1">
-              <h2 class="text-sm font-bold tracking-tight text-black shrink-0">Erik</h2>
+              <h2 id="profile-name" class="text-sm font-bold tracking-tight text-black shrink-0">Erik</h2>
               <span id="profile-vtp-badge" class="hidden text-[9px] font-mono-tech uppercase font-bold px-1.5 py-0.2 border border-black rounded bg-neutral-100 text-black shrink-0">
                 VTP
               </span>
               <span class="text-neutral-300 shrink-0">•</span>
-              <p class="text-[11px] font-mono-tech text-neutral-500 truncate">Course Sangha • Vancouver</p>
+              <p id="profile-sangha-line" class="text-[11px] font-mono-tech text-neutral-500 truncate">AOL Hackathon &#39;26 • Toronto</p>
             </div>
           </div>
         </section>
@@ -741,9 +820,9 @@
           <div class="border border-black rounded-xl p-3 bg-white flex items-start justify-between gap-2">
             <div class="min-w-0">
               <div class="flex items-center gap-1.5 mb-1">
-                <span class="text-xs font-bold text-black">Erik</span>
+                <span id="admin-preview-name" class="text-xs font-bold text-black">Erik</span>
                 <span class="text-[9px] font-mono-tech uppercase px-1.5 py-0.2 border border-black rounded bg-black text-white">
-                  Vancouver
+                  Toronto
                 </span>
               </div>
               <div id="admin-matched-tags" class="flex flex-wrap gap-1">
@@ -758,13 +837,13 @@
 
     <!-- Subtle Prototype Footer -->
     <footer class="px-5 py-3 border-t border-neutral-200 bg-neutral-50 flex items-center justify-between text-[11px] text-neutral-500">
-      <span class="font-mono-tech">User: Erik (You)</span>
+      <span id="footer-user" class="font-mono-tech">User: Erik (You)</span>
       <div class="flex items-center gap-3">
         <button onclick="jumpToDay39Demo()" class="font-mono-tech underline hover:text-black">
           Test Day 39 → 40
         </button>
         <button onclick="resetDemo()" class="font-mono-tech underline hover:text-black">
-          Reset Demo
+          Reset &amp; Replay Join
         </button>
       </div>
     </footer>
@@ -811,6 +890,7 @@
 
     const defaultState = {
       activeTab: 'sadhana',
+      profile: { name: 'Erik', email: '', phone: '', sanghaCode: '' },
       secondsRemaining: TOTAL_PRACTICE_SECONDS,
       activeStepDuration: TOTAL_PRACTICE_SECONDS,
       phase2StepIndex: 0,
@@ -839,7 +919,7 @@
             title: 'Weekly Satsang • Setup & Greeting',
             from: 'Rick (Volunteer Lead)',
             when: 'Wed • 6:30 PM',
-            location: 'Downtown Art of Living Hall, Vancouver',
+            location: 'Downtown Art of Living Hall, Toronto',
             status: 'pending'
           }
         ]
@@ -2045,7 +2125,20 @@
       }, 2400);
     }
 
+    function applyProfile() {
+      const name = (state.profile.name || 'Erik').trim();
+      const set = (id, txt) => { const el = document.getElementById(id); if (el) el.textContent = txt; };
+      set('profile-name', name);
+      set('profile-avatar', name.charAt(0).toUpperCase());
+      set('admin-preview-name', name);
+      set('footer-user', `User: ${name} (You)`);
+      set('profile-sangha-line', "AOL Hackathon '26 • Toronto");
+      const me = state.members.find(m => m.id === 'erik');
+      if (me) me.name = `${name} (You)`;
+    }
+
     function renderAll() {
+      applyProfile();
       updateTabUI();
       updatePlayerUI();
       renderUnifiedSangha();
@@ -2139,7 +2232,7 @@
         title: `Sunday Happiness Program • ${chosenRole}`,
         from: 'Rick (Volunteer Lead)',
         when: 'Sun, Nov 22 • 9:30 AM',
-        location: 'Downtown Art of Living Hall, Vancouver',
+        location: 'Downtown Art of Living Hall, Toronto',
         status: 'pending'
       });
 
@@ -2302,6 +2395,180 @@
       });
     }
 
+
+    // ---------- JOIN FLOW ----------
+    let obStep = 1;
+
+    function obGoStep(n) {
+      obStep = n;
+      [1, 2, 3].forEach(i => {
+        const el = document.getElementById(`ob-step-${i}`);
+        if (!el) return;
+        el.classList.toggle('hidden', i !== n);
+        el.classList.toggle('flex', i === n);
+        const seg = document.getElementById(`ob-seg-${i}`);
+        if (seg) {
+          seg.classList.toggle('bg-black', i <= n);
+          seg.classList.toggle('bg-neutral-200', i > n);
+        }
+      });
+      const label = document.getElementById('ob-step-label');
+      if (label) label.textContent = `Step ${n} of 3`;
+      if (n === 3) renderObSkills();
+      const focusId = n === 1 ? 'ob-code' : n === 2 ? 'ob-name' : null;
+      if (focusId) setTimeout(() => { const f = document.getElementById(focusId); if (f) f.focus(); }, 50);
+    }
+
+    function obSubmitCode(e) {
+      e.preventDefault();
+      const input = document.getElementById('ob-code');
+      const msg = document.getElementById('ob-code-msg');
+      const code = (input.value || '').trim().toUpperCase();
+      if (!/^[A-Z0-9]{4,8}$/.test(code)) {
+        msg.textContent = 'That code looks too short. Codes are 4 to 8 letters or numbers.';
+        msg.className = 'text-[11px] mt-2 min-h-[16px] font-semibold';
+        msg.style.color = '#B91C1C';
+        input.setAttribute('aria-invalid', 'true');
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+      state.profile.sanghaCode = code;
+      document.getElementById('ob-joined-pill').textContent = `Sangha ${code}`;
+      obGoStep(2);
+    }
+
+    function obSubmitDetails(e) {
+      e.preventDefault();
+      const nameEl = document.getElementById('ob-name');
+      const emailEl = document.getElementById('ob-email');
+      const emailMsg = document.getElementById('ob-email-msg');
+      const phoneEl = document.getElementById('ob-phone');
+      const nameMsg = document.getElementById('ob-name-msg');
+      const phoneMsg = document.getElementById('ob-phone-msg');
+      const name = nameEl.value.trim();
+      const phone = phoneEl.value.trim();
+      let ok = true;
+
+      nameMsg.textContent = '';
+      if (!name) {
+        nameMsg.textContent = 'Please enter your name.';
+        nameMsg.style.color = '#B91C1C';
+        nameEl.setAttribute('aria-invalid', 'true');
+        ok = false;
+      } else {
+        nameEl.removeAttribute('aria-invalid');
+      }
+
+      const email = emailEl.value.trim();
+      emailMsg.textContent = '';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        emailMsg.textContent = 'Please enter a valid email address.';
+        emailMsg.style.color = '#B91C1C';
+        emailEl.setAttribute('aria-invalid', 'true');
+        ok = false;
+      } else {
+        emailEl.removeAttribute('aria-invalid');
+      }
+
+      const digits = phone.replace(/\D/g, '');
+      const phoneOk = phone === '' || (/^[0-9+()\-.\s]+$/.test(phone) && digits.length >= 7 && digits.length <= 15);
+      phoneMsg.style.color = '';
+      if (!phoneOk) {
+        phoneMsg.textContent = 'Enter a valid phone number, or leave it blank.';
+        phoneMsg.style.color = '#B91C1C';
+        phoneEl.setAttribute('aria-invalid', 'true');
+        ok = false;
+      } else {
+        phoneEl.removeAttribute('aria-invalid');
+        phoneMsg.textContent = 'Only volunteer coordinators see your email and phone, to reach you about Seva. They are never shown to your Sangha.';
+      }
+      if (!ok) return;
+
+      state.profile.name = name;
+      state.profile.email = email;
+      state.profile.phone = phone;
+      obGoStep(3);
+    }
+
+    function renderObSkills() {
+      const grid = document.getElementById('ob-skills-grid');
+      const count = document.getElementById('ob-selected-count');
+      const otherWrap = document.getElementById('ob-other-wrapper');
+      if (!grid) return;
+      if (count) count.textContent = `${state.seva.selectedSkills.length} Selected`;
+      const skillsMsg = document.getElementById('ob-skills-msg');
+      if (skillsMsg && state.seva.selectedSkills.length > 0) {
+        skillsMsg.textContent = 'Choose at least one way to serve to finish.';
+        skillsMsg.style.color = '';
+      }
+      grid.innerHTML = '';
+      let lastGroup = null;
+      SEVA_SKILL_OPTIONS.forEach(option => {
+        const checked = state.seva.selectedSkills.includes(option.id);
+        if (option.group !== lastGroup) {
+          lastGroup = option.group;
+          const h = document.createElement('div');
+          h.className = 'text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold pt-2';
+          h.textContent = option.group;
+          grid.appendChild(h);
+        }
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.setAttribute('aria-pressed', checked ? 'true' : 'false');
+        row.onclick = () => { toggleSevaSkill(option.id); renderObSkills(); };
+        row.className = `wf-btn w-full text-left px-3 py-2 rounded-xl border transition flex items-center justify-between gap-2 ${
+          checked ? 'border-2 border-black bg-neutral-100 text-black' : 'border-neutral-300 bg-white text-neutral-700 hover:border-black'}`;
+        row.innerHTML = `
+          <div class="flex items-baseline gap-1.5 min-w-0 flex-1">
+            <span class="text-xs font-bold text-black shrink-0">${option.label}</span>
+            <span class="text-[10px] text-neutral-500 truncate">• ${option.hint}</span>
+          </div>
+          <div class="w-4 h-4 rounded border border-black flex items-center justify-center shrink-0 ${checked ? 'bg-black text-white' : 'bg-white'}">
+            ${checked ? '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+          </div>`;
+        grid.appendChild(row);
+      });
+      if (otherWrap) otherWrap.classList.toggle('hidden', !state.seva.selectedSkills.includes('other'));
+    }
+
+    function obFinish() {
+      const msg = document.getElementById('ob-skills-msg');
+      const skills = state.seva.selectedSkills;
+      const otherMissing = skills.includes('other') && !state.seva.otherText.trim();
+      if (skills.length === 0 || otherMissing) {
+        if (msg) {
+          msg.textContent = skills.length === 0
+            ? 'Choose at least one way to serve to finish.'
+            : 'Tell us what "Other" means, or untick it.';
+          msg.style.color = '#B91C1C';
+        }
+        return;
+      }
+      const ob = document.getElementById('onboarding');
+      if (ob) ob.classList.add('hidden');
+      state.activeTab = 'sadhana';
+      renderAll();
+      showToast(`Welcome, ${state.profile.name}! You joined Sangha ${state.profile.sanghaCode}.`);
+    }
+
+    function openOnboarding() {
+      const ob = document.getElementById('onboarding');
+      if (!ob) return;
+      ['ob-code', 'ob-name', 'ob-email', 'ob-phone', 'ob-other-input'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      const codeMsg = document.getElementById('ob-code-msg');
+      if (codeMsg) { codeMsg.textContent = 'Demo: any 4 to 8 letters or numbers works, for example WPCI.'; codeMsg.style.color = ''; }
+      state.seva.selectedSkills = [];
+      state.seva.otherText = '';
+      ob.classList.remove('hidden');
+      ob.scrollTop = 0;
+      obGoStep(1);
+    }
+    window.obGoStep = obGoStep;
+    window.obSubmitCode = obSubmitCode;
+    window.obSubmitDetails = obSubmitDetails;
+    window.obFinish = obFinish;
+    window.openOnboarding = openOnboarding;
+
     function resetDemo() {
       if (state.isPlaying) pauseAudio();
       pendingWisdomFlow = false;
@@ -2309,7 +2576,7 @@
       closeWisdomModal(true);
       state = JSON.parse(JSON.stringify(defaultState));
       renderAll();
-      showToast('Demo state reset.');
+      openOnboarding();
     }
 
     window.switchTab = switchTab;
@@ -2339,10 +2606,12 @@
       document.addEventListener('DOMContentLoaded', () => {
         setupMp3AudioListeners();
         renderAll();
+        openOnboarding();
       });
     } else {
       setupMp3AudioListeners();
       renderAll();
+      openOnboarding();
     }
   </script>
 </body>
