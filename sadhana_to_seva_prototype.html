@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sadhana to Seva — Wireframe Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --app-bg: #FAF2E6;
+      --card-bg: #FFFFFF;
+      --subtle-bg: #F5E7D3;
+      --ink: #29160E;
+      --muted-ink: #6E5042;
+      --primary: #C84B1C;
+      --primary-hover: #AD3F15;
+      --secondary: #DF5372;
+      --secondary-soft: #FCE6EB;
+      --gold: #D97706;
+      --gold-soft: #FEF3C7;
+      --leaf: #4D7C0F;
+    }
+
+    /* Base typography & Variation 1A Warm Sandalwood & Terracotta theme */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #EDE0CE;
+      color: var(--ink);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Warm Sandalwood & Terracotta semantic overrides across existing utility classes */
+    #app-frame {
+      background-color: var(--app-bg) !important;
+      color: var(--ink);
+    }
+    #app-frame header,
+    #app-frame section,
+    #app-frame #blessings-modal-card,
+    #app-frame #wisdom-modal-card,
+    #app-frame #yesterday-popover {
+      background-color: var(--card-bg);
+    }
+    #app-frame footer {
+      background-color: var(--subtle-bg);
+      border-color: rgba(41, 22, 14, 0.2);
+    }
+    #app-frame .border-black {
+      border-color: var(--ink) !important;
+    }
+    #app-frame .text-black {
+      color: var(--ink) !important;
+    }
+    #app-frame .text-neutral-500,
+    #app-frame .text-neutral-600,
+    #app-frame .text-neutral-700 {
+      color: var(--muted-ink) !important;
+    }
+    #app-frame .bg-neutral-50,
+    #app-frame .bg-neutral-100 {
+      background-color: var(--subtle-bg) !important;
+    }
+    #app-frame .bg-black {
+      background-color: var(--primary) !important;
+    }
+    #app-frame .hover\:bg-black:hover {
+      background-color: var(--primary) !important;
+    }
+    #app-frame .shadow-\[4px_4px_0px_0px_rgba\(0\,0\,0\,1\)\] {
+      box-shadow: 4px 4px 0px 0px var(--ink) !important;
+    }
+    #app-frame .shadow-\[8px_8px_0px_0px_rgba\(0\,0\,0\,1\)\] {
+      box-shadow: 8px 8px 0px 0px var(--ink) !important;
+    }
+    #app-frame .shadow-\[4px_4px_0px_0px_rgba\(161\,161\,170\,1\)\] {
+      box-shadow: 4px 4px 0px 0px rgba(41, 22, 14, 0.28) !important;
+    }
+    #app-frame .shadow-\[2px_2px_0px_0px_rgba\(161\,161\,170\,1\)\] {
+      box-shadow: 2px 2px 0px 0px rgba(41, 22, 14, 0.28) !important;
+    }
+    #stillness-backdrop {
+      background-color: var(--app-bg) !important;
+    }
+    #toast-container > div {
+      background-color: var(--ink) !important;
+      color: #FFFBF5 !important;
+      border-color: var(--ink) !important;
+    }
+
+    .font-mono-tech {
+      font-family: 'Inter', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Custom subtle scrollbar for horizontal live feed */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Wireframe tactile button press */
+    .wf-btn {
+      transition: transform 0.1s ease, background-color 0.15s ease, color 0.15s ease;
+    }
+    .wf-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Blessing ripple animation */
+    @keyframes wfRipple {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.9;
+      }
+      100% {
+        transform: scale(2.4);
+        opacity: 0;
+      }
+    }
+    .animate-wf-ripple {
+      animation: wfRipple 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Radial Mandala Emoji Burst (360-degree expansion across screen) */
+    @keyframes radialEmojiBurst {
+      0% {
+        transform: translate3d(0, 0, 0) scale(0.2);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+        transform: translate3d(calc(var(--tx) * 0.35), calc(var(--ty) * 0.35), 0) scale(1.15);
+      }
+      80% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translate3d(var(--tx), var(--ty), 0) scale(0.75);
+        opacity: 0;
+      }
+    }
+    .animate-radial-emoji {
+      animation: radialEmojiBurst var(--dur, 1.5s) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Wisdom Modal Slow Fade-Out & Steady Radial Expansion Emojis */
+    .wisdom-modal-fade {
+      transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .wisdom-card-fade {
+      transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes wisdomHorizonHalo {
+      0% {
+        transform: translate3d(var(--sx), var(--sy), 0) scale(0.5);
+        opacity: 0;
+      }
+      20% {
+        opacity: 0.95;
+        transform: translate3d(calc(var(--sx) + var(--dx) * 0.2), calc(var(--sy) + var(--dy) * 0.2), 0) scale(1);
+      }
+      80% {
+        opacity: 0.85;
+      }
+      100% {
+        transform: translate3d(calc(var(--sx) + var(--dx)), calc(var(--sy) + var(--dy)), 0) scale(0.9);
+        opacity: 0;
+      }
+    }
+    .animate-wisdom-halo {
+      animation: wisdomHorizonHalo 1.5s cubic-bezier(0.25, 0.8, 0.4, 1) forwards;
+    }
+
+    /* Solid White Stillness Veil 0.5s Smooth Fade-Out */
+    .stillness-veil-fade {
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Simulated haptic shake */
+    @keyframes hapticShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-3px); }
+      40% { transform: translateX(3px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+    .animate-haptic {
+      animation: hapticShake 0.28s ease-in-out;
+    }
+
+    /* Slow geometric mandala rotation on 3/3 Sangha completion */
+    @keyframes slowSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-mandala {
+      animation: slowSpin 24s linear infinite;
+    }
+
+    /* Subtle bloom pulse when 3/3 circle completes */
+    @keyframes mandalaBloom {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .animate-bloom {
+      animation: mandalaBloom 3s ease-in-out infinite;
+    }
+
+    /* Pulse on newly lit 40-Bead Mala dot */
+    @keyframes beadPop {
+      0% { transform: scale(0.4); opacity: 0.4; }
+      55% { transform: scale(1.7); opacity: 1; }
+      100% { transform: scale(1.15); opacity: 1; }
+    }
+    .bead-new {
+      animation: beadPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Subtle frame pulse when Wisdom Lotus advances */
+    @keyframes lotusFramePulse {
+      0% { transform: scale(0.96); }
+      50% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+    .animate-lotus-frame {
+      animation: lotusFramePulse 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Day 39 -> 40 "Ripple burst" transition helpers */
+    .d40-petal { transform-box: fill-box; transform-origin: 50% 100%; }
+    .d40-fx { transform-box: fill-box; transform-origin: 50% 50%; }
+
+    /* Option 02: Lotus Hero First, Quote Fades In Second */
+    .wisdom-hero-stage {
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .wisdom-hero-zoomed {
+      transform: translateY(34px) scale(1.24);
+    }
+    .wisdom-hero-settled {
+      transform: translateY(0) scale(1);
+    }
+    .wisdom-quote-reveal {
+      transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .wisdom-quote-hidden {
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+    }
+    .wisdom-quote-shown {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Popover Fade for Yesterday's Circle Halo */
+    .halo-popover {
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Live pulsing monochrome dot */
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.85); }
+    }
+    .animate-live-dot {
+      animation: pulseDot 1.6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center sm:py-6">
+
+  <!-- Mobile Viewport Container (Max 400px on Desktop, Full-width on Mobile) -->
+  <div id="app-frame" class="w-full max-w-[400px] min-h-screen sm:min-h-[820px] sm:max-h-[860px] bg-white sm:border-2 sm:border-black sm:rounded-[28px] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between overflow-hidden relative">
+
+    <!-- SOLID WHITE STILLNESS CANVAS (Hides underlying app during Blessings -> Wisdom -> Emoji Halo sequence) -->
+    <div id="stillness-backdrop" class="hidden stillness-veil-fade absolute inset-0 z-30 bg-white opacity-0 pointer-events-none"></div>
+
+    <!-- FULL-SCREEN SEND BLESSINGS POPUP MODAL (Faded Backdrop + 5s Countdown + Skip) -->
+    <div id="blessings-modal" class="hidden wisdom-modal-fade absolute inset-0 z-40 bg-transparent flex flex-col items-center justify-center p-6 opacity-100">
+      <div id="blessings-modal-card" class="wisdom-card-fade w-full border-2 border-black rounded-3xl bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center relative opacity-100">
+        
+        <!-- Top Countdown Pill -->
+        <div class="w-full flex items-center justify-between mb-4">
+          <span class="text-[10px] font-mono-tech uppercase tracking-wider px-2 py-0.5 border border-black rounded-full bg-neutral-100 text-black font-semibold">
+            Practice Logged
+          </span>
+          <span id="modal-countdown-label" class="text-[11px] font-mono-tech text-neutral-600 font-medium">
+            Auto-closing in 5s
+          </span>
+        </div>
+
+        <!-- Radiating Wireframe Emblem -->
+        <div class="w-16 h-16 rounded-full border-2 border-black bg-neutral-50 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m0-12.728l1.414 1.414m9.9 9.9l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+          </svg>
+        </div>
+
+        <h3 class="text-lg font-bold tracking-tight text-black mb-1">Share Your Stillness</h3>
+        <p class="text-xs text-neutral-600 mb-5 max-w-[240px]">
+          Send a silent wave of blessings to <span class="font-semibold text-black">Abhijeet &amp; Rick</span> in your Course Sangha.
+        </p>
+
+        <!-- Primary Send Blessings Action -->
+        <div class="relative w-full mb-3">
+          <div id="modal-ripple-anchor" class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-visible"></div>
+          <button id="modal-send-blessings-btn" onclick="sendBlessings(true)" class="wf-btn w-full py-3.5 px-4 rounded-xl bg-black text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(161,161,170,1)] active:shadow-none">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m0-12.728l1.414 1.414m9.9 9.9l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+            </svg>
+            <span>Send Blessings</span>
+          </button>
+        </div>
+
+        <!-- 5-Second Visual Countdown Progress Bar -->
+        <div class="w-full h-1 bg-neutral-200 rounded-full overflow-hidden mb-3">
+          <div id="modal-countdown-bar" class="h-full bg-black transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+        </div>
+
+        <!-- Skip Option -->
+        <button onclick="closeBlessingsModal()" class="wf-btn text-xs font-mono-tech uppercase tracking-wider text-neutral-500 hover:text-black py-1.5 px-4 rounded-lg">
+          Skip (<span id="modal-skip-seconds">5</span>s)
+        </button>
+      </div>
+    </div>
+
+    <!-- FULL-SCREEN WISDOM OF THE DAY POPUP MODAL (Appears after Blessings Modal; stays until "Gurudev" is tapped) -->
+    <div id="wisdom-modal" class="hidden wisdom-modal-fade absolute inset-0 z-40 bg-transparent flex flex-col items-center justify-center p-6 opacity-0">
+      <div id="wisdom-modal-card" class="wisdom-card-fade w-full border-2 border-black rounded-3xl bg-white p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center text-center relative opacity-0 translate-y-3 scale-[0.98] overflow-hidden">
+        
+        <!-- Top Header Row (Fades in after Lotus Hero spotlight) -->
+        <div id="wisdom-header-row" class="wisdom-quote-reveal wisdom-quote-hidden w-full flex items-center justify-between mb-3">
+          <span id="wisdom-day-badge" class="text-[10px] font-mono-tech uppercase tracking-wider px-2.5 py-0.5 border border-black rounded-full bg-neutral-100 text-black font-bold">
+            Day 15 / 40
+          </span>
+          <span class="text-[11px] font-mono-tech text-neutral-600 font-medium">
+            Sri Sri Ravi Shankar
+          </span>
+        </div>
+
+        <!-- Unified 40-Bead Mala Ring + 5-Stage Growing Lotus (Hero-First Spotlight) -->
+        <div id="wisdom-hero-wrap" class="wisdom-hero-stage wisdom-hero-zoomed flex flex-col items-center">
+          <div id="wisdom-lotus-box" class="w-24 h-24 rounded-3xl border-2 border-black bg-neutral-50 flex items-center justify-center mb-1.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <svg id="wisdom-mala-svg" viewBox="0 0 110 110" class="w-20 h-20 overflow-visible"></svg>
+          </div>
+          <div id="wisdom-lotus-caption" class="text-[11px] font-mono-tech font-semibold text-neutral-600 mb-3">
+            15 / 40 Mala Beads Lit • Rising Lotus Bud
+          </div>
+        </div>
+
+        <!-- Title, Quote & Confirmation (Fades in cleanly after Lotus settles) -->
+        <div id="wisdom-body-wrap" class="wisdom-quote-reveal wisdom-quote-hidden w-full flex flex-col items-center">
+          <h3 class="text-base font-bold tracking-tight text-black mb-2">Wisdom of the Day</h3>
+          <blockquote class="w-full mb-4 px-4 py-3 rounded-2xl border border-black bg-neutral-50">
+            <p id="wisdom-quote-text" class="text-[14px] font-semibold leading-snug tracking-tight text-black">
+              “Breath is the bridge between body and mind; when the breath is calm, the mind naturally settles into stillness.”
+            </p>
+          </blockquote>
+
+          <!-- Primary Confirmation Action -->
+          <button onclick="closeWisdomModal()" class="wf-btn w-full py-3.5 px-4 rounded-xl bg-black text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(161,161,170,1)] active:shadow-none">
+            <span>Gurudev</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Toast Notification Area (Inside Mobile Frame) -->
+    <div id="toast-container" class="pointer-events-none absolute top-16 left-4 right-4 z-50 flex flex-col items-center gap-2"></div>
+
+    <!-- Full-Screen Emoji Propagation Layer (Above modals so blessings radiate across entire app) -->
+    <div id="blessings-emoji-layer" class="pointer-events-none absolute inset-0 z-50 overflow-hidden"></div>
+
+    <!-- Playing Focus Backdrop (Dims everything except Daily Pranayama when playing) -->
+  <div id="playing-focus-backdrop" onclick="pauseAudio()" class="hidden fixed sm:absolute inset-0 z-20 bg-black/95 transition-opacity duration-300 cursor-pointer" title="Tap anywhere to pause"></div>
+
+  <!-- Native HTML5 Audio Element bound to the hosted Jumpshare MP3 stream -->
+  <audio id="pranayama-mp3-audio" preload="metadata" src="https://jumpshare.com/s/TqNWSHmtp1Bk5rIVHeRD-"></audio>
+
+  <!-- Main Scrollable Content -->
+  <div class="flex-1 overflow-y-auto no-scrollbar pb-6">
+
+      <!-- 1. HEADER & SANGHA CONTEXT -->
+      <header class="px-5 pt-5 pb-3 border-b border-black bg-white sticky top-0 z-20">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <span class="text-[10px] font-mono-tech uppercase tracking-widest text-neutral-500 block">Wireframe v0.3</span>
+            <h1 class="text-lg font-bold tracking-tight text-black leading-tight">Sadhana to Seva</h1>
+          </div>
+          <!-- Sangha Pill -->
+          <div class="border border-black rounded-full px-2.5 py-1 flex items-center gap-1.5 bg-neutral-50">
+            <span class="w-2 h-2 rounded-full" style="background-color: #C84B1C;"></span>
+            <span class="text-xs font-medium text-black">Course Sangha</span>
+          </div>
+        </div>
+
+        <!-- Primary Navigation Switcher: Sadhana vs Seva & Profile -->
+        <nav aria-label="Primary Views" class="grid grid-cols-2 gap-1.5 p-1 bg-neutral-100 border border-black rounded-xl">
+          <button id="tab-btn-sadhana" onclick="switchTab('sadhana')" class="wf-btn py-1.5 px-3 rounded-lg text-xs font-bold tracking-tight bg-black text-white transition">
+            Sadhana
+          </button>
+          <button id="tab-btn-seva" onclick="switchTab('seva')" class="wf-btn py-1.5 px-3 rounded-lg text-xs font-semibold tracking-tight text-neutral-700 hover:text-black flex items-center justify-center gap-1.5 transition">
+            <span>Seva &amp; Profile</span>
+            <span id="seva-invite-dot" class="w-1.5 h-1.5 rounded-full" style="background-color: #DF5372;"></span>
+          </button>
+        </nav>
+      </header>
+
+      <!-- MAIN BODY SECTIONS: VIEW 1 — SADHANA -->
+      <main id="view-sadhana" class="px-5 pt-4 space-y-3.5">
+
+        <!-- 1. COMPACT 40-DAY SKY LOTUS STRIP (Above Sangha Circle) -->
+        <section aria-label="40-Day SKY Lotus Progress" class="border border-black rounded-2xl px-3.5 py-2.5 bg-white flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <!-- Mini 40-Bead Mala Ring + Growing Lotus -->
+            <div class="w-11 h-11 rounded-xl border border-black bg-neutral-50 flex items-center justify-center shrink-0">
+              <svg id="header-mala-svg" viewBox="0 0 110 110" class="w-9 h-9 overflow-visible"></svg>
+            </div>
+            <div class="min-w-0">
+              <h2 class="text-sm font-bold tracking-tight text-black truncate">40-Day SKY Lotus</h2>
+            </div>
+          </div>
+          <span id="streak-counter-text" class="text-xs font-mono-tech font-bold px-2.5 py-1 border border-black rounded-lg bg-neutral-50 text-black shrink-0">
+            14 / 40
+          </span>
+        </section>
+
+        <!-- 2. UNIFIED SANGHA CIRCLE & ACTIVITY FEED -->
+        <section id="sangha-unified-card" aria-label="Unified Sangha Circle and Activity" class="border-2 border-black rounded-2xl p-4 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+          <!-- Top Header Row -->
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-black animate-live-dot"></span>
+              <h2 class="text-sm font-bold tracking-tight text-black">Sangha Circle</h2>
+            </div>
+            <span id="sangha-total-circles" class="text-xs font-mono-tech font-semibold text-neutral-600">
+              12 Circles Closed
+            </span>
+          </div>
+
+          <!-- Integrated Horizontal Scrollable Sangha Activity Strip (Above Circle) -->
+          <div class="mb-3">
+            <div class="flex items-center justify-between mb-1.5 px-0.5">
+              <span class="text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold">Recent Activity</span>
+              <span class="text-[10px] font-mono-tech text-neutral-400">Swipe →</span>
+            </div>
+            <div id="live-feed-list" class="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
+              <!-- Populated dynamically by JS -->
+            </div>
+          </div>
+
+          <!-- Prominent Concentric Geometric Circle Graphic -->
+          <div class="relative flex flex-col items-center justify-center py-3 bg-neutral-50 border border-black rounded-xl overflow-hidden">
+            
+            <!-- Unified Two-Segment Status Capsule (✓ Yesterday 7/7 | Today 5/7) -->
+            <div class="relative z-10 inline-flex items-center border border-black rounded-full overflow-hidden shadow-[2px_2px_0px_0px_rgba(161,161,170,1)] mb-2">
+              <button onclick="toggleYesterdayPopover()" class="wf-btn px-3 py-1 text-white text-[11px] font-mono-tech font-bold leading-none flex items-center gap-1" style="background-color: #D97706;" title="Tap for yesterday's completion times">
+                <span>✓ Yesterday 7/7</span>
+              </button>
+              <span id="sangha-fraction-badge" class="px-3 py-1 bg-white text-black text-[11px] font-mono-tech font-bold leading-none border-l border-black">
+                Today 5/7
+              </span>
+            </div>
+
+            <!-- Tappable Yesterday Completion Popover -->
+            <div id="yesterday-popover" class="halo-popover hidden opacity-0 translate-y-1 absolute top-11 left-2.5 right-2.5 z-20 border-2 border-black rounded-xl bg-white p-2.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-xs">
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-bold text-black">Yesterday’s Completed Circle (7/7)</span>
+                <button onclick="toggleYesterdayPopover()" class="font-mono-tech text-[11px] underline text-neutral-500">Close</button>
+              </div>
+              <p class="text-[11px] font-mono-tech text-neutral-700 leading-relaxed">
+                Priya (6:15 AM) • Abhijeet (6:40 AM) • Ramesh (7:05 AM) • Rick (7:15 AM) • Suresh (7:50 AM) • Erik (8:10 AM) • Anjali (8:25 AM)
+              </p>
+            </div>
+
+            <div id="mandala-wrapper" class="relative w-48 h-48 flex items-center justify-center">
+              <!-- SVG Sacred Geometry + Yesterday's Delicate Double-Line Lotus Halo + 7 Orbital Nodes -->
+              <svg id="sangha-circle-svg" class="w-full h-full overflow-visible" viewBox="0 0 240 240">
+                <defs>
+                  <!-- Style C: Delicate Double-Contour Lotus Petal Pair (Lotus Rose & Espresso Ink) -->
+                  <g id="outer-double-lotus-pair">
+                    <path d="M 107 23.5 C 108 15.5 115 11 120 8 C 125 11 132 15.5 133 23.5 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="1.2" stroke-linejoin="round" />
+                    <path d="M 112.5 23.5 C 113.5 18 117 15 120 13 C 123 15 126.5 18 127.5 23.5" fill="none" stroke="#DF5372" stroke-width="0.9" stroke-linecap="round" />
+
+                    <path d="M 107 216.5 C 108 224.5 115 229 120 232 C 125 229 132 224.5 133 216.5 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="1.2" stroke-linejoin="round" />
+                    <path d="M 112.5 216.5 C 113.5 222 117 225 120 227 C 123 225 126.5 222 127.5 216.5" fill="none" stroke="#DF5372" stroke-width="0.9" stroke-linecap="round" />
+                  </g>
+                </defs>
+
+                <!-- OUTER DOUBLE-CONTOUR LOTUS HALO (Yesterday's 7/7 Blessing — Slow Rotation) -->
+                <g class="animate-mandala" style="transform-origin: 120px 120px;">
+                  <circle cx="120" cy="120" r="97" fill="none" stroke="#D97706" stroke-width="1.6" />
+                  <circle cx="120" cy="120" r="93.5" fill="none" stroke="#29160E" stroke-width="0.7" opacity="0.45" />
+                  <use href="#outer-double-lotus-pair" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(22.5 120 120)" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(45 120 120)" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(67.5 120 120)" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(90 120 120)" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(112.5 120 120)" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(135 120 120)" />
+                  <use href="#outer-double-lotus-pair" transform="rotate(157.5 120 120)" />
+                </g>
+
+                <!-- INNER ACTIVE RING (Today's 7-Node Circle, r=72) -->
+                <circle cx="120" cy="120" r="72" fill="none" stroke="#29160E" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="4 4" />
+
+                <!-- Dynamic 7 Orbital Arcs Layer -->
+                <g id="sangha-arcs-layer"></g>
+
+                <!-- Inner 6-Orbit Woven Nucleus Core (Rotates & illuminates when 7/7 complete) -->
+                <g id="sacred-core" style="transform-origin: 120px 120px; color: #6E5042;">
+                  <circle cx="120" cy="120" r="51" fill="#ffffff" stroke="#29160E" stroke-width="1.15" />
+
+                  <g id="core-filigree-ellipses" fill="none" stroke="#6E5042" stroke-width="0.95" opacity="0.65">
+                    <ellipse cx="120" cy="120" rx="44" ry="19" />
+                    <ellipse cx="120" cy="120" rx="44" ry="19" transform="rotate(30 120 120)" />
+                    <ellipse cx="120" cy="120" rx="44" ry="19" transform="rotate(60 120 120)" />
+                    <ellipse cx="120" cy="120" rx="44" ry="19" transform="rotate(90 120 120)" />
+                    <ellipse cx="120" cy="120" rx="44" ry="19" transform="rotate(120 120 120)" />
+                    <ellipse cx="120" cy="120" rx="44" ry="19" transform="rotate(150 120 120)" />
+                  </g>
+
+                  <circle id="core-center-dot" cx="120" cy="120" r="22" fill="#ffffff" stroke="#29160E" stroke-width="1.6" />
+                </g>
+
+                <!-- Center Fraction Label -->
+                <text id="svg-center-count" x="120" y="119" text-anchor="middle" class="font-mono-tech font-bold text-[16px]" fill="#29160E">5/7</text>
+                <text id="svg-center-sub" x="120" y="132" text-anchor="middle" class="font-mono-tech font-bold uppercase text-[8px]" fill="#6E5042">TODAY</text>
+
+                <!-- Dynamic 7 Orbital Member Nodes Layer -->
+                <g id="sangha-nodes-layer"></g>
+              </svg>
+            </div>
+
+            <!-- Dynamic Status / Celebration Pill Inside Circle Box -->
+            <div id="sangha-complete-banner" class="hidden mt-1 mb-1 px-3 py-1 bg-black text-white rounded-full flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span class="text-[10px] font-mono-tech font-bold uppercase tracking-wider">Sangha Circle Complete</span>
+            </div>
+            <p id="sangha-sub-caption" class="text-xs font-medium text-neutral-700 text-center mt-1 px-3">
+              Outer lotus halo: Yesterday’s <span class="font-bold text-black">7/7</span> blessing
+            </p>
+          </div>
+        </section>
+
+        <!-- 3. DAILY PRACTICE (PRANAYAMA / PHASE 2 SAHAJ SEQUENCE) PLAYER -->
+        <section id="daily-pranayama-card" aria-label="Daily Practice Player" class="border border-black rounded-2xl p-3.5 bg-white relative transition-all duration-300">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <h2 id="practice-card-title" class="text-sm font-bold text-black truncate">Daily Pranayama</h2>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span id="practice-status-badge" class="text-[10px] font-mono-tech uppercase px-2 py-0.5 border border-black rounded-md bg-neutral-100 text-black font-medium">
+                Pending
+              </span>
+            </div>
+          </div>
+
+          <!-- PHASE 2 UNLOCKED SEQUENCE BAR (Appears at Day 40: Padma -> Kriya -> Mantra) -->
+          <div id="phase2-sequence-bar" class="hidden mb-2.5 space-y-1.5">
+            <div class="px-2.5 py-1.5 rounded-xl bg-black text-white flex items-center justify-between text-[11px]">
+              <span class="font-bold">🪷 Phase 2 Unlocked • Sahaj Sequence</span>
+              <span class="font-mono-tech text-[10px] text-neutral-300">45m Total</span>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5 text-center">
+              <button type="button" onclick="selectPhase2Step(0)" id="p2-step-0" class="wf-btn py-1.5 px-1 rounded-lg border-2 border-black bg-black text-white text-[10px] font-bold leading-tight">
+                1. Padma<br><span class="font-mono-tech font-normal opacity-80">10:00</span>
+              </button>
+              <button type="button" onclick="selectPhase2Step(1)" id="p2-step-1" class="wf-btn py-1.5 px-1 rounded-lg border border-black bg-neutral-50 text-black text-[10px] font-semibold leading-tight">
+                2. Kriya<br><span class="font-mono-tech font-normal text-neutral-600">20:00</span>
+              </button>
+              <button type="button" onclick="selectPhase2Step(2)" id="p2-step-2" class="wf-btn py-1.5 px-1 rounded-lg border border-black bg-neutral-50 text-black text-[10px] font-semibold leading-tight">
+                3. Mantra<br><span class="font-mono-tech font-normal text-neutral-600">15:00</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STATE A: PENDING PRACTICE (Single Inline Row: Play + Timer/Scrubber + Mark Completed) -->
+          <div id="practice-pending-view">
+            <div class="border border-black rounded-xl p-2.5 bg-neutral-50 flex items-center gap-2.5">
+              <!-- Play / Pause Button -->
+              <button id="play-pause-btn" onclick="toggleAudio()" class="wf-btn w-10 h-10 rounded-full bg-black text-white flex items-center justify-center shrink-0 focus:outline-none" aria-label="Play or Pause Practice">
+                <!-- Play Icon -->
+                <svg id="icon-play" class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <!-- Pause Icon (Hidden initially) -->
+                <svg id="icon-pause" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+              </button>
+
+              <!-- Timer & Scrubber -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-1">
+                  <span id="practice-step-label" class="text-[11px] font-semibold text-neutral-700 truncate">Short SKY Kriya</span>
+                  <span id="timer-display" class="text-sm font-mono-tech font-bold tracking-tight text-black">20:00</span>
+                </div>
+                <!-- Progress Bar -->
+                <div id="scrubber-track" onclick="scrubAudio(event)" class="w-full h-2.5 bg-white border border-black rounded-full overflow-hidden cursor-pointer relative" title="Click to scrub">
+                  <div id="scrubber-fill" class="h-full bg-black transition-all duration-200" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Inline Mark as Completed Button -->
+              <button id="complete-offline-btn" onclick="completePractice('offline')" class="wf-btn shrink-0 py-2 px-2.5 rounded-lg border border-black bg-white hover:bg-black hover:text-white text-black text-[11px] font-semibold flex items-center gap-1" title="Mark as Completed">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Complete</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- STATE B: COMPLETED TODAY (Compact Confirmation + Re-open Blessings + Undo/Revert Option) -->
+          <div id="practice-completed-view" class="hidden space-y-2">
+            <!-- Completed Confirmation Box + Revert Link -->
+            <div class="border border-black rounded-xl p-2.5 bg-neutral-50 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full bg-black text-white flex items-center justify-center shrink-0">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-black">Logged for Today</p>
+                  <p id="completion-source-label" class="text-[10px] font-mono-tech text-neutral-600">Completed offline</p>
+                </div>
+              </div>
+
+              <!-- Undo / Revert Button -->
+              <button onclick="revertCompletion()" class="wf-btn text-[11px] font-mono-tech underline font-semibold text-neutral-600 hover:text-black px-2 py-1 rounded border border-transparent hover:border-black transition" title="Revert accidental completion">
+                Undo / Revert
+              </button>
+            </div>
+          </div>
+
+          <!-- Phase 2 Locked Preview Hint (Days 1–39, stays visible after completing a day) -->
+          <div id="phase2-locked-hint" class="mt-2.5 pt-2 border-t border-dashed border-neutral-300 flex items-center justify-between text-[11px] text-neutral-600">
+            <span class="flex items-center gap-1 font-medium">
+              <span>🔒</span>
+              <span>Phase 2: Padma Sadhana + Mantra</span>
+            </span>
+            <span class="font-mono-tech font-bold text-black">Day 40</span>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- MAIN BODY SECTIONS: VIEW 2 — SEVA & PROFILE -->
+      <main id="view-seva" class="hidden px-5 pt-4 space-y-4">
+
+        <!-- 1. COMPACT PROFILE HEADER -->
+        <section aria-label="Volunteer Profile" class="border-2 border-black rounded-2xl px-3.5 py-2.5 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-full bg-black text-white font-bold text-xs flex items-center justify-center shrink-0">
+              E
+            </div>
+            <div class="flex items-center gap-1.5 min-w-0 flex-1">
+              <h2 class="text-sm font-bold tracking-tight text-black shrink-0">Erik</h2>
+              <span id="profile-vtp-badge" class="hidden text-[9px] font-mono-tech uppercase font-bold px-1.5 py-0.2 border border-black rounded bg-neutral-100 text-black shrink-0">
+                VTP
+              </span>
+              <span class="text-neutral-300 shrink-0">•</span>
+              <p class="text-[11px] font-mono-tech text-neutral-500 truncate">Course Sangha • Vancouver</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. INCOMING SEVA INVITES (From Admins / Volunteer Managers) -->
+        <section aria-label="Volunteer Invites" class="border border-black rounded-2xl p-4 bg-white">
+          <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center gap-1.5">
+              <h2 class="text-sm font-bold tracking-tight text-black">Seva Invites</h2>
+            </div>
+            <span id="invites-count-badge" class="text-[10px] font-mono-tech font-bold px-2 py-0.5 border border-black rounded-full bg-neutral-100 text-black">
+              1 PENDING
+            </span>
+          </div>
+
+          <div id="seva-invites-list" class="space-y-2.5">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </section>
+
+        <!-- 3. SEVA SKILLS CHECKLIST (9 Consistent Roles) -->
+        <section aria-label="Seva Skills Checklist" class="border border-black rounded-2xl p-4 bg-white">
+          <div class="flex items-baseline justify-between mb-1">
+            <h2 class="text-sm font-bold tracking-tight text-black">My Seva Skills</h2>
+            <span id="seva-selected-count" class="text-xs font-mono-tech font-bold text-black">3 Selected</span>
+          </div>
+          <p class="text-[11px] text-neutral-600 mb-3">
+            Select how you’d love to serve when upcoming Satsangs or courses need support.
+          </p>
+
+          <!-- 9-Item Interactive Checklist Grid -->
+          <div id="seva-skills-grid" class="grid grid-cols-1 gap-1.5">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+          <!-- Conditional Input When "Other" is Checked -->
+          <div id="seva-other-wrapper" class="hidden mt-2.5 pt-2.5 border-t border-neutral-200">
+            <label for="seva-other-input" class="block text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold mb-1">
+              Specify Other Seva
+            </label>
+            <input
+              id="seva-other-input"
+              type="text"
+              placeholder="e.g., Photography, Rides, Decoration..."
+              oninput="updateOtherSevaText(this.value)"
+              class="w-full px-3 py-2 text-xs border border-black rounded-xl bg-neutral-50 text-black placeholder:text-neutral-400 focus:outline-none focus:bg-white"
+            />
+          </div>
+        </section>
+
+        <!-- 4. VOLUNTEER MANAGER DIRECTORY PREVIEW (How Admins Filter & Invite) -->
+        <section aria-label="Volunteer Manager Preview" class="border border-dashed border-black rounded-2xl p-4 bg-neutral-50">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-mono-tech uppercase tracking-wider px-2 py-0.5 border border-black rounded bg-white text-black font-bold">
+              Admin / Coordinator View
+            </span>
+            <button onclick="sendSimulatedInvite()" class="wf-btn text-[11px] font-mono-tech underline font-semibold text-black hover:opacity-75">
+              + Test Invite
+            </button>
+          </div>
+          <p class="text-[11px] text-neutral-600 mb-2.5">
+            How your checked roles appear to coordinators organizing upcoming Satsangs &amp; courses:
+          </p>
+          <div class="border border-black rounded-xl p-3 bg-white flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-xs font-bold text-black">Erik</span>
+                <span class="text-[9px] font-mono-tech uppercase px-1.5 py-0.2 border border-black rounded bg-black text-white">
+                  Vancouver
+                </span>
+              </div>
+              <div id="admin-matched-tags" class="flex flex-wrap gap-1">
+                <!-- Populated dynamically with Erik's active tags -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Subtle Prototype Footer -->
+    <footer class="px-5 py-3 border-t border-neutral-200 bg-neutral-50 flex items-center justify-between text-[11px] text-neutral-500">
+      <span class="font-mono-tech">User: Erik (You)</span>
+      <div class="flex items-center gap-3">
+        <button onclick="jumpToDay39Demo()" class="font-mono-tech underline hover:text-black">
+          Test Day 39 → 40
+        </button>
+        <button onclick="resetDemo()" class="font-mono-tech underline hover:text-black">
+          Reset Demo
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Core Prototype Constants
+    const TOTAL_PRACTICE_SECONDS = 20 * 60; // 20:00
+    const GOAL_DAYS = 40;
+
+    const PHASE2_STEPS = [
+      { label: 'Padma Sadhana Asanas', seconds: 10 * 60 },
+      { label: 'Short SKY Kriya', seconds: 20 * 60 },
+      { label: 'Sahaj Mantra Meditation', seconds: 15 * 60 }
+    ];
+
+    const WISDOM_QUOTES = [
+      "Breath is the bridge between body and mind; when the breath is calm, the mind naturally settles into stillness.",
+      "Silence is not the absence of sound, it is the depth of your own presence.",
+      "When you serve without expectation, Seva becomes effortless meditation in action.",
+      "A steady daily Sadhana anchors the mind so you can meet every moment with clarity and warmth."
+    ];
+
+    const SEVA_SKILL_OPTIONS = [
+      { id: 'vtp', group: 'Training', label: 'VTP Graduate', hint: 'Completed Volunteer Training Program' },
+      { id: 'room', group: 'Satsang & Events', label: 'Room Setup', hint: 'Mats, cushions, hall & altar prep' },
+      { id: 'usher', group: 'Satsang & Events', label: 'Satsang Usher', hint: 'Welcomes people, assures seating', isNew: true },
+      { id: 'sound', group: 'Satsang & Events', label: 'Sound Tech', hint: 'Mics, speakers & audio levels' },
+      { id: 'zoom', group: 'Satsang & Events', label: 'Zoom Host', hint: 'Online room & hybrid tech support' },
+      { id: 'bhajan', group: 'Music & Teaching', label: 'Bhajan Singer', hint: 'Leading or supporting kirtan vocals' },
+      { id: 'musician', group: 'Music & Teaching', label: 'Musician', hint: 'Harmonium, tabla, guitar or flute' },
+      { id: 'yoga', group: 'Music & Teaching', label: 'Yoga Teacher', hint: 'Guiding Sri Sri Yoga & warm-ups' },
+      { id: 'cooking', group: 'Ashram & Hospitality', label: 'Cooking', hint: 'Prasad, snacks & meal preparation' },
+      { id: 'washroom', group: 'Ashram & Hospitality', label: 'Washroom Cleaner', hint: 'Keeping washrooms fresh & stocked', isNew: true },
+      { id: 'homestay', group: 'Ashram & Hospitality', label: 'Home Stay Host', hint: 'Billets out-of-town course participants', isNew: true },
+      { id: 'transport-provider', group: 'Transportation', label: 'Transportation Provider', hint: 'Drives participants when needed', isNew: true },
+      { id: 'transport-coord', group: 'Transportation', label: 'Transportation Coordinator', hint: 'Organizes transport to the ashram', isNew: true },
+      { id: 'outreach', group: 'Community', label: 'Outreach Assistant', hint: 'Makes phone calls', isNew: true },
+      { id: 'bookstudy', group: 'Community', label: 'Book Study Organizer', hint: 'Organizes wisdom book clubs', isNew: true },
+      { id: 'trees', group: 'Community', label: 'Tree Planter', hint: 'Helps counter climate change', isNew: true },
+      { id: 'other', group: 'Other', label: 'Other', hint: 'Additional community skills' }
+    ];
+
+    const defaultState = {
+      activeTab: 'sadhana',
+      secondsRemaining: TOTAL_PRACTICE_SECONDS,
+      activeStepDuration: TOTAL_PRACTICE_SECONDS,
+      phase2StepIndex: 0,
+      isPlaying: false,
+      erikCompleted: false,
+      completionSource: null,
+      blessingSentToday: false,
+      streakDays: 14,
+      selectedMemberId: null,
+      members: [
+        { id: 'abhijeet', name: 'Abhijeet', completed: true, timeLabel: '6:40 AM', isLive: false },
+        { id: 'priya', name: 'Priya', completed: true, timeLabel: '6:55 AM', isLive: false },
+        { id: 'ramesh', name: 'Ramesh', completed: true, timeLabel: '7:05 AM', isLive: false },
+        { id: 'rick', name: 'Rick', completed: true, timeLabel: '7:15 AM', isLive: false },
+        { id: 'suresh', name: 'Suresh', completed: true, timeLabel: '7:40 AM', isLive: false },
+        { id: 'anjali', name: 'Anjali', completed: false, timeLabel: 'Pending', isLive: false },
+        { id: 'erik', name: 'Erik (You)', completed: false, timeLabel: 'Pending', isLive: false }
+      ],
+      seva: {
+        available: true,
+        selectedSkills: ['vtp', 'room', 'sound'],
+        otherText: '',
+        invites: [
+          {
+            id: 'inv-1',
+            title: 'Weekly Satsang • Setup & Greeting',
+            from: 'Rick (Volunteer Lead)',
+            when: 'Wed • 6:30 PM',
+            location: 'Downtown Art of Living Hall, Vancouver',
+            status: 'pending'
+          }
+        ]
+      }
+    };
+
+    let state = JSON.parse(JSON.stringify(defaultState));
+    let audioTimerInterval = null;
+    let modalCountdownInterval = null;
+    let modalSecondsLeft = 5;
+    let pendingWisdomFlow = false;
+    let stillnessRevealTimer = null;
+    let wisdomRevealTimers = [];
+    const HOSTED_JUMPSHARE_URLS = [
+      'https://jumpshare.com/s/TqNWSHmtp1Bk5rIVHeRD-',
+      'https://jumpshare.com/s/TqNWSHmtp1Bk5rIVHeRD+'
+    ];
+    let hostedUrlIndex = 0;
+    let mp3ObjectUrl = HOSTED_JUMPSHARE_URLS[0];
+    let mp3LoadedName = 'Sudarshan Kriya Pranayama (Hosted)';
+
+    function openMp3Picker() {
+      const picker = document.getElementById('pranayama-mp3-picker');
+      if (picker) picker.click();
+    }
+
+    function handleMp3FileSelected(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const mp3El = document.getElementById('pranayama-mp3-audio');
+      if (!mp3El) return;
+
+      if (mp3ObjectUrl && mp3ObjectUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(mp3ObjectUrl);
+      }
+      mp3ObjectUrl = URL.createObjectURL(file);
+      mp3LoadedName = file.name;
+      mp3El.src = mp3ObjectUrl;
+      mp3El.load();
+
+      const loadBtn = document.getElementById('load-mp3-btn');
+      if (loadBtn) {
+        loadBtn.textContent = '✓ MP3 Loaded';
+        loadBtn.className = 'wf-btn text-[10px] font-mono-tech font-bold px-2 py-0.5 border border-black rounded-md bg-black text-white transition';
+      }
+
+      const stepLabelEl = document.getElementById('practice-step-label');
+      if (stepLabelEl) {
+        stepLabelEl.textContent = 'Sudarshan Kriya Pranayama (MP3)';
+      }
+
+      showToast('MP3 ready — press Play to listen');
+      startAudio();
+    }
+
+    function setupMp3AudioListeners() {
+      const mp3El = document.getElementById('pranayama-mp3-audio');
+      if (!mp3El) return;
+
+      mp3El.addEventListener('error', () => {
+        if (hostedUrlIndex + 1 < HOSTED_JUMPSHARE_URLS.length && !mp3ObjectUrl.startsWith('blob:')) {
+          hostedUrlIndex += 1;
+          mp3ObjectUrl = HOSTED_JUMPSHARE_URLS[hostedUrlIndex];
+          mp3El.src = mp3ObjectUrl;
+          mp3El.load();
+          if (state.isPlaying) {
+            mp3El.play().catch(() => {
+              pauseAudio();
+              showToast('Audio stream blocked by host');
+            });
+          }
+        } else if (state.isPlaying) {
+          pauseAudio();
+          showToast('Audio stream blocked by host');
+        }
+      });
+
+      mp3El.addEventListener('loadedmetadata', () => {
+        if (isFinite(mp3El.duration) && mp3El.duration > 0) {
+          const isPhase2 = state.streakDays >= GOAL_DAYS;
+          if (!isPhase2 || state.phase2StepIndex === 1) {
+            state.activeStepDuration = Math.round(mp3El.duration);
+            if (!state.isPlaying && !state.erikCompleted) {
+              state.secondsRemaining = state.activeStepDuration;
+            }
+            updatePlayerUI();
+          }
+        }
+      });
+
+      mp3El.addEventListener('timeupdate', () => {
+        if (!state.isPlaying || !mp3ObjectUrl) return;
+        const dur = isFinite(mp3El.duration) && mp3El.duration > 0
+          ? mp3El.duration
+          : (state.activeStepDuration || TOTAL_PRACTICE_SECONDS);
+        state.activeStepDuration = Math.round(dur);
+        state.secondsRemaining = Math.max(0, Math.ceil(dur - mp3El.currentTime));
+        updatePlayerUI();
+      });
+
+      mp3El.addEventListener('ended', () => {
+        if (!state.isPlaying || !mp3ObjectUrl) return;
+        state.secondsRemaining = 0;
+        pauseAudio();
+        completePractice('audio');
+      });
+    }
+
+    const pranayamaAudio = {
+      ctx: null,
+      masterGain: null,
+      droneNodes: []
+    };
+
+    function initPranayamaAudio() {
+      if (!pranayamaAudio.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        pranayamaAudio.ctx = new AudioCtx();
+        pranayamaAudio.masterGain = pranayamaAudio.ctx.createGain();
+        pranayamaAudio.masterGain.gain.value = 0.28;
+        pranayamaAudio.masterGain.connect(pranayamaAudio.ctx.destination);
+      }
+      if (pranayamaAudio.ctx.state === 'suspended') {
+        pranayamaAudio.ctx.resume();
+      }
+    }
+
+    function startTanpuraDrone() {
+      initPranayamaAudio();
+      stopTanpuraDrone();
+      const ctx = pranayamaAudio.ctx;
+      const now = ctx.currentTime;
+      const freqs = [130.81, 196.00, 261.63];
+      freqs.forEach((f, idx) => {
+        const osc = ctx.createOscillator();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+
+        osc.type = idx === 0 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(f, now);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(420, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(idx === 0 ? 0.14 : 0.08, now + 1.4);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(pranayamaAudio.masterGain);
+        osc.start(now);
+
+        pranayamaAudio.droneNodes.push({ osc, gain });
+      });
+    }
+
+    function stopTanpuraDrone() {
+      if (!pranayamaAudio.ctx || pranayamaAudio.droneNodes.length === 0) return;
+      const ctx = pranayamaAudio.ctx;
+      const now = ctx.currentTime;
+      pranayamaAudio.droneNodes.forEach(({ osc, gain }) => {
+        try {
+          gain.gain.cancelScheduledValues(now);
+          gain.gain.setValueAtTime(Math.max(0.0001, gain.gain.value), now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+          osc.stop(now + 0.38);
+        } catch (e) {}
+      });
+      pranayamaAudio.droneNodes = [];
+    }
+
+    function playBreathTone(type, durationSec = 1.2) {
+      if (!pranayamaAudio.ctx) return;
+      const ctx = pranayamaAudio.ctx;
+      const now = ctx.currentTime;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+
+      if (type === 'chime') {
+        osc.frequency.setValueAtTime(523.25, now);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.18, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+      }
+
+      osc.connect(gain);
+      gain.connect(pranayamaAudio.masterGain);
+      osc.start(now);
+      osc.stop(now + Math.max(1.9, durationSec + 0.1));
+    }
+
+    function tickPranayamaGuidance(elapsedSec) {
+      if (elapsedSec % 30 === 0) {
+        playBreathTone('chime', 1.4);
+      }
+    }
+
+    function clearWisdomRevealTimers() {
+      wisdomRevealTimers.forEach(t => clearTimeout(t));
+      wisdomRevealTimers = [];
+    }
+
+    function openBlessingsModal() {
+      const modal = document.getElementById('blessings-modal');
+      const card = document.getElementById('blessings-modal-card');
+      const bar = document.getElementById('modal-countdown-bar');
+      const label = document.getElementById('modal-countdown-label');
+      const skipSec = document.getElementById('modal-skip-seconds');
+
+      if (!modal) return;
+      if (modalCountdownInterval) {
+        clearInterval(modalCountdownInterval);
+        modalCountdownInterval = null;
+      }
+
+      modalSecondsLeft = 5;
+      if (label) label.textContent = `Auto-closing in ${modalSecondsLeft}s`;
+      if (skipSec) skipSec.textContent = `${modalSecondsLeft}`;
+      if (bar) {
+        bar.style.transition = 'none';
+        bar.style.width = '100%';
+        void bar.offsetWidth;
+      }
+
+      showStillnessBackdrop();
+      modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      if (card) {
+        card.classList.remove('opacity-0', '-translate-y-2', 'scale-[0.97]');
+        card.classList.add('opacity-100');
+      }
+
+      // Start the 5s drain only once the modal is visible (a display:none element skips the transition)
+      if (bar) {
+        void bar.offsetWidth;
+        bar.style.transition = 'width 5s linear';
+        bar.style.width = '0%';
+      }
+
+      modalCountdownInterval = setInterval(() => {
+        modalSecondsLeft -= 1;
+        if (label) label.textContent = `Auto-closing in ${Math.max(0, modalSecondsLeft)}s`;
+        if (skipSec) skipSec.textContent = `${Math.max(0, modalSecondsLeft)}`;
+
+        if (modalSecondsLeft <= 0) {
+          closeBlessingsModal();
+        }
+      }, 1000);
+    }
+
+    function closeBlessingsModal(immediate = false) {
+      if (modalCountdownInterval) {
+        clearInterval(modalCountdownInterval);
+        modalCountdownInterval = null;
+      }
+
+      const modal = document.getElementById('blessings-modal');
+      const card = document.getElementById('blessings-modal-card');
+      const shouldChainWisdom = pendingWisdomFlow && !immediate;
+      pendingWisdomFlow = false;
+
+      if (immediate) {
+        if (modal) modal.classList.add('hidden', 'opacity-0');
+        if (card) {
+          card.classList.remove('-translate-y-2', 'scale-[0.97]');
+          card.classList.add('opacity-100');
+        }
+        hideStillnessBackdrop(0);
+        return;
+      }
+
+      if (modal) {
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+      if (card) {
+        card.classList.remove('opacity-100');
+        card.classList.add('opacity-0', '-translate-y-2', 'scale-[0.97]');
+      }
+
+      if (shouldChainWisdom) {
+        setTimeout(() => {
+          if (modal) modal.classList.add('hidden');
+          if (card) {
+            card.classList.remove('-translate-y-2', 'scale-[0.97]');
+            card.classList.add('opacity-100');
+          }
+          openWisdomModal();
+        }, 420);
+      } else {
+        setTimeout(() => {
+          if (modal) modal.classList.add('hidden');
+          if (card) {
+            card.classList.remove('-translate-y-2', 'scale-[0.97]');
+            card.classList.add('opacity-100');
+          }
+        }, 900);
+        hideStillnessBackdrop(650);
+      }
+    }
+
+    function sendBlessings(fromModal = false) {
+      triggerBlessingsWave();
+      showToast('Silent blessings sent to your 7-member Sangha');
+
+      if (fromModal) {
+        setTimeout(() => closeBlessingsModal(), 1050);
+      }
+    }
+
+    function showStillnessBackdrop() {
+      if (stillnessRevealTimer) {
+        clearTimeout(stillnessRevealTimer);
+        stillnessRevealTimer = null;
+      }
+      const veil = document.getElementById('stillness-backdrop');
+      if (!veil) return;
+      veil.classList.remove('hidden', 'opacity-0');
+      veil.classList.add('opacity-100');
+    }
+
+    function hideStillnessBackdrop(delayMs = 0) {
+      if (stillnessRevealTimer) {
+        clearTimeout(stillnessRevealTimer);
+        stillnessRevealTimer = null;
+      }
+      const veil = document.getElementById('stillness-backdrop');
+      if (!veil) return;
+
+      stillnessRevealTimer = setTimeout(() => {
+        veil.classList.remove('opacity-100');
+        veil.classList.add('opacity-0');
+        setTimeout(() => {
+          veil.classList.add('hidden');
+        }, 520);
+      }, delayMs);
+    }
+
+    function openWisdomModal() {
+      clearWisdomRevealTimers();
+      const modal = document.getElementById('wisdom-modal');
+      const card = document.getElementById('wisdom-modal-card');
+      const headerRow = document.getElementById('wisdom-header-row');
+      const heroWrap = document.getElementById('wisdom-hero-wrap');
+      const bodyWrap = document.getElementById('wisdom-body-wrap');
+      const quoteEl = document.getElementById('wisdom-quote-text');
+      const dayBadge = document.getElementById('wisdom-day-badge');
+      const captionEl = document.getElementById('wisdom-lotus-caption');
+      const malaSvg = document.getElementById('wisdom-mala-svg');
+
+      if (!modal) return;
+
+      const currentDay = Math.min(GOAL_DAYS, state.streakDays);
+      const prevDay = Math.max(0, currentDay - 1);
+
+      if (quoteEl) {
+        quoteEl.textContent = `“${WISDOM_QUOTES[currentDay % WISDOM_QUOTES.length]}”`;
+      }
+
+      if (headerRow) {
+        headerRow.classList.remove('wisdom-quote-shown');
+        headerRow.classList.add('wisdom-quote-hidden');
+      }
+      if (bodyWrap) {
+        bodyWrap.classList.remove('wisdom-quote-shown');
+        bodyWrap.classList.add('wisdom-quote-hidden');
+      }
+      if (heroWrap) {
+        heroWrap.classList.remove('wisdom-hero-settled');
+        heroWrap.classList.add('wisdom-hero-zoomed');
+      }
+      const isDay40Moment = currentDay >= GOAL_DAYS;
+      if (heroWrap) heroWrap.style.transform = '';
+      if (malaSvg) {
+        malaSvg.innerHTML = isDay40Moment ? buildDay40TransitionSvg() : buildMalaLotusSvg(prevDay, false);
+      }
+      if (captionEl) {
+        captionEl.textContent = `${prevDay} / ${GOAL_DAYS} Mala Beads Lit`;
+      }
+
+      modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      if (card) {
+        card.classList.remove('opacity-0', 'translate-y-3', 'scale-[0.98]', '-translate-y-2', 'scale-[0.97]');
+        card.classList.add('opacity-100');
+      }
+
+      if (isDay40Moment) {
+        runDay40Transition({ malaSvg, heroWrap, headerRow, bodyWrap, dayBadge, captionEl });
+        return;
+      }
+
+      wisdomRevealTimers.push(setTimeout(() => {
+        if (malaSvg) {
+          malaSvg.innerHTML = buildMalaLotusSvg(currentDay, true);
+        }
+        const box = document.getElementById('wisdom-lotus-box');
+        if (box) {
+          box.classList.remove('animate-lotus-frame');
+          void box.offsetWidth;
+          box.classList.add('animate-lotus-frame');
+        }
+        if (dayBadge) {
+          dayBadge.textContent = currentDay >= GOAL_DAYS
+            ? `Day ${currentDay} / ${GOAL_DAYS} • Phase 2 🪷`
+            : `Day ${currentDay} / ${GOAL_DAYS}`;
+        }
+        if (captionEl) {
+          captionEl.textContent = currentDay >= GOAL_DAYS
+            ? '40 / 40 Mala Beads Lit • Full Sacred Lotus!'
+            : `${currentDay} / ${GOAL_DAYS} Mala Beads Lit`;
+        }
+      }, 280));
+
+      wisdomRevealTimers.push(setTimeout(() => {
+        if (heroWrap) {
+          heroWrap.classList.remove('wisdom-hero-zoomed');
+          heroWrap.classList.add('hero-settled');
+        }
+        if (headerRow) {
+          headerRow.classList.remove('wisdom-quote-hidden');
+          headerRow.classList.add('wisdom-quote-shown');
+        }
+        if (bodyWrap) {
+          bodyWrap.classList.remove('wisdom-quote-hidden');
+          bodyWrap.classList.add('wisdom-quote-shown');
+        }
+      }, 1050));
+    }
+
+    function closeWisdomModal(immediate = false) {
+      clearWisdomRevealTimers();
+      const modal = document.getElementById('wisdom-modal');
+      const card = document.getElementById('wisdom-modal-card');
+      if (!modal) return;
+
+      if (immediate) {
+        modal.classList.add('hidden', 'opacity-0');
+        hideStillnessBackdrop(0);
+        return;
+      }
+
+      spawnWisdomHorizonHalo();
+      modal.classList.remove('opacity-100');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      if (card) {
+        card.classList.remove('opacity-100');
+        card.classList.add('opacity-0', '-translate-y-2', 'scale-[0.97]');
+      }
+
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 1150);
+
+      hideStillnessBackdrop(1450);
+    }
+
+    function spawnWisdomHorizonHalo() {
+      const container = document.getElementById('blessings-emoji-layer');
+      if (!container) return;
+
+      const emojis = ['🕊️', '🌿', '💫', '🕉️'];
+      const count = 10;
+      const startRadius = 68;
+      const travelDist = 115;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
+        const el = document.createElement('span');
+        el.textContent = emojis[i % emojis.length];
+
+        const sx = Math.cos(angle) * startRadius;
+        const sy = Math.sin(angle) * startRadius;
+        const dx = Math.cos(angle) * travelDist;
+        const dy = Math.sin(angle) * travelDist;
+
+        el.style.position = 'absolute';
+        el.style.left = '50%';
+        el.style.top = '50%';
+        el.style.marginLeft = '-11px';
+        el.style.marginTop = '-11px';
+        el.style.fontSize = '21px';
+        el.style.setProperty('--sx', `${sx}px`);
+        el.style.setProperty('--sy', `${sy}px`);
+        el.style.setProperty('--dx', `${dx}px`);
+        el.style.setProperty('--dy', `${dy}px`);
+        el.className = 'animate-wisdom-halo';
+
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 1550);
+      }
+    }
+
+    // Day 39 -> 40: animated structure (39 lit beads, hidden ring, bud + hidden full lotus)
+    function buildDay40TransitionSvg() {
+      let beads = '';
+      for (let i = 1; i <= 40; i++) {
+        const angle = ((i - 1) / 40) * Math.PI * 2 - Math.PI / 2;
+        const cx = (55 + Math.cos(angle) * 47).toFixed(2);
+        const cy = (55 + Math.sin(angle) * 47).toFixed(2);
+        const lit = i <= 39;
+        beads += `<circle class="d40-bead" cx="${cx}" cy="${cy}" r="${lit ? 2.25 : 1.6}" fill="${lit ? '#D97706' : '#ffffff'}" stroke="${lit ? '#29160E' : '#a1a1aa'}" stroke-width="0.95" style="transform-box: fill-box; transform-origin: center;" />`;
+      }
+      return `
+        <g class="d40-beads">${beads}</g>
+        <g class="d40-ring" opacity="0">
+          <circle cx="55" cy="55" r="47" fill="none" stroke="#F5E7D3" stroke-width="7"/>
+          <circle cx="55" cy="55" r="50.5" fill="none" stroke="#29160E" stroke-width="0.9"/>
+          <circle cx="55" cy="55" r="43.5" fill="none" stroke="#29160E" stroke-width="0.9"/>
+          <circle cx="55" cy="55" r="47" fill="none" stroke="#D97706" stroke-width="5.2"/>
+        </g>
+        <circle class="d40-inner" cx="55" cy="55" r="37" fill="#ffffff" stroke="#29160E" stroke-width="1.25" />
+        <g transform="translate(5, 5)">
+          <g class="d40-bud">
+            <path d="M 24 72 Q 50 68 76 72" fill="none" stroke="#6E5042" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M 50 70 L 50 56" stroke="#4D7C0F" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M 50 66 C 40 64 38 56 44 53 C 48 55 50 61 50 66 Z" fill="#F5E7D3" stroke="#29160E" stroke-width="1.6"/>
+            <path d="M 50 58 C 38 48 40 32 50 24 C 60 32 62 48 50 58 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="2"/>
+            <path d="M 50 56 C 44 46 45 35 50 28 C 55 35 56 46 50 56 Z" fill="#DF5372" opacity="0.35"/>
+          </g>
+          <g class="d40-full" opacity="0">
+            <path d="M 22 72 Q 50 68 78 72" fill="none" stroke="#6E5042" stroke-width="1.5" stroke-linecap="round"/>
+            <g class="d40-petal"><path d="M 50 68 C 30 70 20 58 20 46 C 32 45 42 54 50 68 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="1.8"/></g>
+            <g class="d40-petal"><path d="M 50 68 C 70 70 80 58 80 46 C 68 45 58 54 50 68 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="1.8"/></g>
+            <g class="d40-petal"><path d="M 50 68 C 34 62 28 45 33 32 C 42 38 47 51 50 68 Z" fill="#DF5372" fill-opacity="0.35" stroke="#29160E" stroke-width="1.9"/></g>
+            <g class="d40-petal"><path d="M 50 68 C 66 62 72 45 67 32 C 58 38 53 51 50 68 Z" fill="#DF5372" fill-opacity="0.35" stroke="#29160E" stroke-width="1.9"/></g>
+            <g class="d40-petal"><path d="M 50 68 C 40 52 40 34 50 22 C 60 34 60 52 50 68 Z" fill="#DF5372" fill-opacity="0.65" stroke="#29160E" stroke-width="2.1"/></g>
+            <g class="d40-petal"><path d="M 38 68 Q 50 73 62 68 Q 50 63 38 68 Z" fill="#D97706" stroke="#29160E" stroke-width="1.3"/></g>
+          </g>
+        </g>
+        <g class="d40-fx"></g>
+      `;
+    }
+
+    // "Ripple burst": push in, all beads flash gold, ring snaps on with glow + ripples, petals spring open, then settle.
+    function runDay40Transition(refs) {
+      const { malaSvg, heroWrap, headerRow, bodyWrap, dayBadge, captionEl } = refs;
+      if (!malaSvg) return;
+      const later = (fn, ms) => wisdomRevealTimers.push(setTimeout(fn, ms));
+      const ease = 'cubic-bezier(.22,1,.36,1)';
+      const an = (el, kf, o) => el && el.animate(kf, Object.assign({ fill: 'both', easing: ease }, o));
+      const q = sel => malaSvg.querySelector(sel);
+      const NS = 'http://www.w3.org/2000/svg';
+      const fx = q('.d40-fx');
+
+      // 1. Push the lotus box in
+      later(() => { if (heroWrap) heroWrap.style.transform = 'translateY(40px) scale(1.5)'; }, 100);
+
+      // 2. Every bead flashes gold at once
+      later(() => {
+        malaSvg.querySelectorAll('.d40-bead').forEach(b => {
+          b.setAttribute('fill', '#D97706');
+          b.setAttribute('stroke', '#29160E');
+          an(b, [{ transform: 'scale(1)' }, { transform: 'scale(2.2)' }, { transform: 'scale(1.3)' }], { duration: 600 });
+        });
+      }, 700);
+
+      // 3. Ring snaps on with glow, ripples, and the lotus opens
+      later(() => {
+        const beadsG = q('.d40-beads');
+        const ringG = q('.d40-ring');
+        if (beadsG) beadsG.setAttribute('opacity', '0');
+        if (ringG) {
+          ringG.setAttribute('opacity', '1');
+          ringG.style.transformBox = 'fill-box';
+          ringG.style.transformOrigin = 'center';
+          an(ringG, [{ transform: 'scale(1.15)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 350 });
+        }
+        an(q('.d40-inner'), [{ r: 37 }, { r: 39 }], { duration: 400, easing: 'ease-out' });
+
+        if (fx) {
+          const glow = document.createElementNS(NS, 'circle');
+          glow.setAttribute('class', 'd40-fx');
+          glow.setAttribute('cx', 55); glow.setAttribute('cy', 55); glow.setAttribute('r', 50);
+          glow.setAttribute('fill', '#FDE68A');
+          fx.appendChild(glow);
+          an(glow, [{ opacity: 0.9, transform: 'scale(0.4)' }, { opacity: 0, transform: 'scale(2.2)' }], { duration: 800, easing: 'ease-out' });
+          for (let k = 0; k < 3; k++) {
+            const ring = document.createElementNS(NS, 'circle');
+            ring.setAttribute('class', 'd40-fx');
+            ring.setAttribute('cx', 55); ring.setAttribute('cy', 55); ring.setAttribute('r', 52);
+            ring.setAttribute('fill', 'none'); ring.setAttribute('stroke', '#D97706'); ring.setAttribute('stroke-width', '1.6');
+            fx.appendChild(ring);
+            an(ring, [{ opacity: 0.9, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.4)' }], { duration: 1300, delay: k * 220, easing: 'ease-out' });
+          }
+        }
+
+        an(q('.d40-bud'), [{ opacity: 1 }, { opacity: 0 }], { duration: 250 });
+        const full = q('.d40-full');
+        if (full) full.setAttribute('opacity', '1');
+        malaSvg.querySelectorAll('.d40-petal').forEach((el, k) => {
+          later(() => an(el, [
+            { transform: 'scale(0.1)', opacity: 0 },
+            { transform: 'scale(1.12)', opacity: 1, offset: 0.7 },
+            { transform: 'scale(1)', opacity: 1 }
+          ], { duration: 520 }), 200 + k * 90);
+        });
+
+        const box = document.getElementById('wisdom-lotus-box');
+        if (box) {
+          box.classList.remove('animate-lotus-frame');
+          void box.offsetWidth;
+          box.classList.add('animate-lotus-frame');
+        }
+        if (dayBadge) dayBadge.textContent = `Day ${GOAL_DAYS} / ${GOAL_DAYS} • Phase 2 🪷`;
+        if (captionEl) captionEl.textContent = '40 / 40 Mala Beads Lit • Full Sacred Lotus!';
+      }, 1300);
+
+      // 4. Settle back and reveal the quote
+      later(() => {
+        if (heroWrap) {
+          heroWrap.style.transform = '';
+          heroWrap.classList.remove('wisdom-hero-zoomed');
+          heroWrap.classList.add('wisdom-hero-settled');
+        }
+        if (headerRow) {
+          headerRow.classList.remove('wisdom-quote-hidden');
+          headerRow.classList.add('wisdom-quote-shown');
+        }
+        if (bodyWrap) {
+          bodyWrap.classList.remove('wisdom-quote-hidden');
+          bodyWrap.classList.add('wisdom-quote-shown');
+        }
+      }, 2900);
+    }
+
+    function buildMalaLotusSvg(day, animateNewBead = false) {
+      let beadsHtml = '';
+      for (let i = 1; i <= 40; i++) {
+        const angle = ((i - 1) / 40) * Math.PI * 2 - Math.PI / 2;
+        const cx = (55 + Math.cos(angle) * 47).toFixed(2);
+        const cy = (55 + Math.sin(angle) * 47).toFixed(2);
+        const lit = i <= day;
+        const isToday = animateNewBead && i === day;
+
+        const r = isToday ? '2.9' : lit ? '2.25' : '1.6';
+        const fill = isToday ? '#DF5372' : lit ? '#D97706' : '#ffffff';
+        const stroke = lit ? '#29160E' : '#a1a1aa';
+        const extra = isToday ? `class="bead-new" style="transform-origin: ${cx}px ${cy}px;"` : '';
+
+        beadsHtml += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="0.95" ${extra} />`;
+      }
+
+      // Day 40 complete: the 40 beads become a clear mala band (gold fill, ink outlines)
+      const isComplete = day >= 40;
+      if (isComplete) {
+        beadsHtml = `
+          <circle cx="55" cy="55" r="47" fill="none" stroke="#F5E7D3" stroke-width="7"/>
+          <circle cx="55" cy="55" r="50.5" fill="none" stroke="#29160E" stroke-width="0.9"/>
+          <circle cx="55" cy="55" r="43.5" fill="none" stroke="#29160E" stroke-width="0.9"/>
+          <circle cx="55" cy="55" r="47" fill="none" stroke="#D97706" stroke-width="5.2"/>
+        `;
+      }
+
+      let centerHtml = '';
+      if (day < 40) {
+        centerHtml = `
+          <path d="M 24 72 Q 50 68 76 72" fill="none" stroke="#6E5042" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 50 70 L 50 56" stroke="#4D7C0F" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M 50 66 C 40 64 38 56 44 53 C 48 55 50 61 50 66 Z" fill="#F5E7D3" stroke="#29160E" stroke-width="1.6"/>
+          <path d="M 50 58 C 38 48 40 32 50 24 C 60 32 62 48 50 58 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="2"/>
+          <path d="M 50 56 C 44 46 45 35 50 28 C 55 35 56 46 50 56 Z" fill="#DF5372" opacity="0.35"/>
+        `;
+      } else {
+        centerHtml = `
+          <path d="M 22 72 Q 50 68 78 72" fill="none" stroke="#6E5042" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M 50 68 C 30 70 20 58 20 46 C 32 45 42 54 50 68 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="1.8"/>
+          <path d="M 50 68 C 70 70 80 58 80 46 C 68 45 58 54 50 68 Z" fill="#FCE6EB" stroke="#29160E" stroke-width="1.8"/>
+          <path d="M 50 68 C 34 62 28 45 33 32 C 42 38 47 51 50 68 Z" fill="#DF5372" fill-opacity="0.35" stroke="#29160E" stroke-width="1.9"/>
+          <path d="M 50 68 C 66 62 72 45 67 32 C 58 38 53 51 50 68 Z" fill="#DF5372" fill-opacity="0.35" stroke="#29160E" stroke-width="1.9"/>
+          <path d="M 50 68 C 40 52 40 34 50 22 C 60 34 60 52 50 68 Z" fill="#DF5372" fill-opacity="0.65" stroke="#29160E" stroke-width="2.1"/>
+          <path d="M 38 68 Q 50 73 62 68 Q 50 63 38 68 Z" fill="#D97706" stroke="#29160E" stroke-width="1.3"/>
+        `;
+      }
+
+      return `
+        <g>${beadsHtml}</g>
+        <circle cx="55" cy="55" r="${isComplete ? 39 : 37}" fill="#ffffff" stroke="#29160E" stroke-width="1.25" />
+        <g transform="translate(5, 5)">${centerHtml}</g>
+      `;
+    }
+
+    function renderStreakGrid() {
+      const headerSvg = document.getElementById('header-mala-svg');
+      const counterEl = document.getElementById('streak-counter-text');
+      const day = Math.min(GOAL_DAYS, state.streakDays);
+
+      if (headerSvg) {
+        headerSvg.innerHTML = buildMalaLotusSvg(day, false);
+      }
+      if (counterEl) {
+        counterEl.textContent = day >= GOAL_DAYS ? `${day} / ${GOAL_DAYS} ✓` : `${day} / ${GOAL_DAYS}`;
+      }
+    }
+
+    function renderUnifiedSangha() {
+      const total = state.members.length;
+      const completedCount = state.members.filter(m => m.completed).length;
+      const isComplete = completedCount === total;
+
+      const fractionBadge = document.getElementById('sangha-fraction-badge');
+      const totalCirclesEl = document.getElementById('sangha-total-circles');
+      const centerCount = document.getElementById('svg-center-count');
+      const centerSub = document.getElementById('svg-center-sub');
+      const banner = document.getElementById('sangha-complete-banner');
+      const subCaption = document.getElementById('sangha-sub-caption');
+      const sacredCore = document.getElementById('sacred-core');
+      const mandalaWrapper = document.getElementById('mandala-wrapper');
+
+      if (fractionBadge) {
+        fractionBadge.textContent = `Today ${completedCount}/${total}`;
+      }
+      if (totalCirclesEl) {
+        totalCirclesEl.textContent = isComplete ? '13 Circles Closed' : '12 Circles Closed';
+      }
+      if (centerCount) {
+        centerCount.textContent = `${completedCount}/${total}`;
+      }
+      if (centerSub) {
+        centerSub.textContent = isComplete ? 'DONE' : 'TODAY';
+      }
+      if (banner) {
+        banner.classList.toggle('hidden', !isComplete);
+      }
+      if (subCaption) {
+        subCaption.innerHTML = isComplete
+          ? 'All 7 Sangha members completed today’s practice!'
+          : `Outer lotus halo: Yesterday’s <span class="font-bold text-black">${total}/${total}</span> blessing`;
+      }
+      if (sacredCore) {
+        sacredCore.style.color = isComplete ? '#C84B1C' : '#6E5042';
+      }
+      if (mandalaWrapper) {
+        mandalaWrapper.classList.toggle('animate-bloom', isComplete);
+      }
+
+      const feedList = document.getElementById('live-feed-list');
+      if (feedList) {
+        feedList.innerHTML = '';
+        state.members.forEach(m => {
+          const initial = m.name.charAt(0).toUpperCase();
+          const shortName = m.name.replace(' (You)', '');
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.onclick = () => selectMemberNode(m.id);
+          chip.className = m.completed
+            ? 'shrink-0 border border-black bg-neutral-50 text-black rounded-xl px-2.5 py-1.5 flex items-center gap-2 text-left'
+            : 'shrink-0 border border-dashed border-black bg-white text-neutral-600 rounded-xl px-2.5 py-1.5 flex items-center gap-2 text-left';
+
+          chip.innerHTML = `
+            <div class="w-6 h-6 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
+              m.completed ? 'bg-black text-white' : 'border border-dashed border-black bg-white text-neutral-600'
+            }">${initial}</div>
+            <div class="leading-tight">
+              <div class="text-xs font-bold text-black">${shortName}</div>
+              <div class="text-[10px] font-mono-tech text-neutral-600">${m.timeLabel}</div>
+            </div>
+          `;
+          feedList.appendChild(chip);
+        });
+      }
+
+      const arcsLayer = document.getElementById('sangha-arcs-layer');
+      const nodesLayer = document.getElementById('sangha-nodes-layer');
+      if (!arcsLayer || !nodesLayer) return;
+
+      arcsLayer.innerHTML = '';
+      nodesLayer.innerHTML = '';
+
+      const cx = 120;
+      const cy = 120;
+      const r = 72;
+      const stepAngle = (Math.PI * 2) / total;
+
+      state.members.forEach((m, idx) => {
+        const startA = -Math.PI / 2 + idx * stepAngle;
+        const endA = startA + stepAngle;
+
+        const x1 = (cx + r * Math.cos(startA)).toFixed(2);
+        const y1 = (cy + r * Math.sin(startA)).toFixed(2);
+        const x2 = (cx + r * Math.cos(endA)).toFixed(2);
+        const y2 = (cy + r * Math.sin(endA)).toFixed(2);
+
+        const arc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        arc.setAttribute('d', `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`);
+        arc.setAttribute('fill', 'none');
+        arc.setAttribute('stroke-linecap', 'round');
+
+        if (m.completed) {
+          arc.setAttribute('stroke', m.id === 'erik' ? '#DF5372' : '#C84B1C');
+          arc.setAttribute('stroke-width', '3.75');
+        } else {
+          arc.setAttribute('stroke', '#6E5042');
+          arc.setAttribute('stroke-width', '1.75');
+          arc.setAttribute('stroke-dasharray', '4 4');
+        }
+        arcsLayer.appendChild(arc);
+      });
+
+      state.members.forEach((m, idx) => {
+        const nodeA = -Math.PI / 2 + idx * stepAngle;
+        const nx = (cx + r * Math.cos(nodeA)).toFixed(2);
+        const ny = (cy + r * Math.sin(nodeA)).toFixed(2);
+        const initial = m.name.charAt(0).toUpperCase();
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.style.cursor = 'pointer';
+        g.onclick = () => selectMemberNode(m.id);
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', nx);
+        circle.setAttribute('cy', ny);
+        circle.setAttribute('r', '14.5');
+
+        if (m.completed) {
+          circle.setAttribute('fill', m.id === 'erik' ? '#DF5372' : '#C84B1C');
+          circle.setAttribute('stroke', '#ffffff');
+          circle.setAttribute('stroke-width', '2');
+        } else {
+          circle.setAttribute('fill', '#ffffff');
+          circle.setAttribute('stroke', '#29160E');
+          circle.setAttribute('stroke-width', '1.75');
+          circle.setAttribute('stroke-dasharray', '3 2');
+        }
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', nx);
+        text.setAttribute('y', (parseFloat(ny) + 4.5).toFixed(2));
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('class', 'font-mono-tech font-bold text-[12px]');
+        text.setAttribute('fill', m.completed ? '#ffffff' : '#6E5042');
+        text.textContent = initial;
+
+        g.appendChild(circle);
+        g.appendChild(text);
+        nodesLayer.appendChild(g);
+      });
+    }
+
+    function toggleYesterdayPopover() {
+      const pop = document.getElementById('yesterday-popover');
+      if (!pop) return;
+      if (pop.classList.contains('hidden')) {
+        pop.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          pop.classList.remove('opacity-0', 'translate-y-1');
+          pop.classList.add('opacity-100', 'translate-y-0');
+        });
+      } else {
+        pop.classList.add('opacity-0', 'translate-y-1');
+        setTimeout(() => pop.classList.add('hidden'), 220);
+      }
+    }
+
+    function selectMemberNode(memberId) {
+      const member = state.members.find(m => m.id === memberId);
+      if (!member) return;
+      showToast(`${member.name}: ${member.completed ? 'Completed at ' + member.timeLabel : 'Pending today'}`);
+    }
+
+    function selectPhase2Step(stepIdx) {
+      state.phase2StepIndex = stepIdx;
+      const step = PHASE2_STEPS[stepIdx];
+      state.activeStepDuration = step.seconds;
+      state.secondsRemaining = step.seconds;
+      updatePlayerUI();
+    }
+
+    function toggleAudio() {
+      if (state.isPlaying) {
+        pauseAudio();
+      } else {
+        startAudio();
+      }
+    }
+
+    function startAudio() {
+      if (state.erikCompleted) return;
+      const mp3El = document.getElementById('pranayama-mp3-audio');
+      const isPhase2 = state.streakDays >= GOAL_DAYS;
+      const isKriyaTrack = !isPhase2 || state.phase2StepIndex === 1;
+
+      if (isKriyaTrack && !mp3ObjectUrl) {
+        openMp3Picker();
+        return;
+      }
+
+      state.isPlaying = true;
+      updatePlayerUI();
+
+      if (isKriyaTrack && mp3El && mp3ObjectUrl) {
+        mp3El.play().catch(() => {
+          pauseAudio();
+          openMp3Picker();
+        });
+      } else {
+        startTanpuraDrone();
+        const totalDur = state.activeStepDuration || TOTAL_PRACTICE_SECONDS;
+        if (audioTimerInterval) clearInterval(audioTimerInterval);
+        audioTimerInterval = setInterval(() => {
+          if (state.secondsRemaining > 1) {
+            state.secondsRemaining -= 1;
+            updatePlayerUI();
+            tickPranayamaGuidance(totalDur - state.secondsRemaining);
+          } else {
+            state.secondsRemaining = 0;
+            pauseAudio();
+            completePractice('audio');
+          }
+        }, 1000);
+      }
+    }
+
+    function pauseAudio() {
+      state.isPlaying = false;
+      const mp3El = document.getElementById('pranayama-mp3-audio');
+      if (mp3El && !mp3El.paused) {
+        try { mp3El.pause(); } catch (e) {}
+      }
+      stopTanpuraDrone();
+      if (audioTimerInterval) {
+        clearInterval(audioTimerInterval);
+        audioTimerInterval = null;
+      }
+      updatePlayerUI();
+    }
+
+    function scrubAudio(event) {
+      if (state.erikCompleted) return;
+      const track = document.getElementById('scrubber-track');
+      if (!track) return;
+      const rect = track.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+      const mp3El = document.getElementById('pranayama-mp3-audio');
+      const isPhase2 = state.streakDays >= GOAL_DAYS;
+
+      if (mp3El && mp3ObjectUrl && (!isPhase2 || state.phase2StepIndex === 1) && isFinite(mp3El.duration) && mp3El.duration > 0) {
+        mp3El.currentTime = ratio * mp3El.duration;
+        state.activeStepDuration = Math.round(mp3El.duration);
+        state.secondsRemaining = Math.max(1, Math.ceil(mp3El.duration - mp3El.currentTime));
+      } else {
+        const totalDur = state.activeStepDuration || TOTAL_PRACTICE_SECONDS;
+        state.secondsRemaining = Math.max(1, Math.round(totalDur * (1 - ratio)));
+      }
+
+      updatePlayerUI();
+    }
+
+    function completePractice(source = 'offline') {
+      if (state.erikCompleted) return;
+      if (state.isPlaying) pauseAudio();
+
+      state.erikCompleted = true;
+      state.completionSource = source;
+      state.streakDays = Math.min(GOAL_DAYS, state.streakDays + 1);
+
+      const erikMember = state.members.find(m => m.id === 'erik');
+      if (erikMember) {
+        erikMember.completed = true;
+        erikMember.timeLabel = 'Just now';
+      }
+
+      playBreathTone('chime', 1.8);
+      renderAll();
+
+      pendingWisdomFlow = true;
+      openBlessingsModal();
+    }
+
+    function revertCompletion() {
+      if (!state.erikCompleted) return;
+      if (state.isPlaying) pauseAudio();
+
+      pendingWisdomFlow = false;
+      closeBlessingsModal(true);
+      closeWisdomModal(true);
+
+      state.erikCompleted = false;
+      state.completionSource = null;
+      state.streakDays = Math.max(1, state.streakDays - 1);
+      state.secondsRemaining = state.activeStepDuration || TOTAL_PRACTICE_SECONDS;
+
+      const erikMember = state.members.find(m => m.id === 'erik');
+      if (erikMember) {
+        erikMember.completed = false;
+        erikMember.timeLabel = 'Pending';
+      }
+
+      renderAll();
+      showToast('Completion reverted');
+    }
+
+    function jumpToDay39Demo() {
+      if (state.isPlaying) pauseAudio();
+      pendingWisdomFlow = false;
+      closeBlessingsModal(true);
+      closeWisdomModal(true);
+
+      state.erikCompleted = false;
+      state.completionSource = null;
+      state.streakDays = 39;
+      state.phase2StepIndex = 0;
+      state.activeStepDuration = TOTAL_PRACTICE_SECONDS;
+      state.secondsRemaining = TOTAL_PRACTICE_SECONDS;
+
+      const erikMember = state.members.find(m => m.id === 'erik');
+      if (erikMember) {
+        erikMember.completed = false;
+        erikMember.timeLabel = 'Pending';
+      }
+
+      renderAll();
+      showToast('Set to Day 39 / 40 — tap Complete to unlock Phase 2!');
+    }
+
+    function updateBlessingsUI() {
+      const trigger = document.getElementById('inline-blessings-trigger');
+      const note = document.getElementById('blessings-status-note');
+      if (trigger) {
+        trigger.textContent = '+ Send Blessings';
+      }
+      if (note) {
+        note.textContent = '7-member Sangha';
+      }
+    }
+
+    function triggerBlessingsWave() {
+      const container = document.getElementById('blessings-emoji-layer');
+      if (!container) return;
+
+      const ring1Emojis = ['🪷', '🙏', '✨', '🤍'];
+      const ring2Emojis = ['✨', '🕊️', '🪷', '🙏'];
+
+      for (let i = 0; i < 10; i++) {
+        const angle = (i / 10) * Math.PI * 2;
+        const dist = 135 + Math.random() * 25;
+        spawnRadialBlessingEmoji(container, ring1Emojis[i % ring1Emojis.length], angle, dist, 1.35, 22, 0);
+      }
+
+      for (let i = 0; i < 12; i++) {
+        const angle = ((i + 0.5) / 12) * Math.PI * 2;
+        const dist = 185 + Math.random() * 35;
+        spawnRadialBlessingEmoji(container, ring2Emojis[i % ring2Emojis.length], angle, dist, 1.65, 19, 140);
+      }
+    }
+
+    function spawnRadialBlessingEmoji(container, symbol, angle, distance, duration, size, delay) {
+      setTimeout(() => {
+        const el = document.createElement('span');
+        el.textContent = symbol;
+
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        el.style.position = 'absolute';
+        el.style.left = '50%';
+        el.style.top = '52%';
+        el.style.marginLeft = '-11px';
+        el.style.marginTop = '-11px';
+        el.style.fontSize = `${size}px`;
+        el.style.setProperty('--tx', `${tx}px`);
+        el.style.setProperty('--ty', `${ty}px`);
+        el.style.setProperty('--dur', `${duration}s`);
+        el.className = 'animate-radial-emoji';
+
+        container.appendChild(el);
+        setTimeout(() => el.remove(), duration * 1000 + 120);
+      }, delay);
+    }
+
+    function formatTime(totalSecs) {
+      const mins = Math.floor(totalSecs / 60);
+      const secs = totalSecs % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function updatePlayerUI() {
+      const timerEl = document.getElementById('timer-display');
+      const scrubberFill = document.getElementById('scrubber-fill');
+      const iconPlay = document.getElementById('icon-play');
+      const iconPause = document.getElementById('icon-pause');
+      const pendingView = document.getElementById('practice-pending-view');
+      const completedView = document.getElementById('practice-completed-view');
+      const statusBadge = document.getElementById('practice-status-badge');
+      const sourceLabel = document.getElementById('completion-source-label');
+      const focusBackdrop = document.getElementById('playing-focus-backdrop');
+      const pranayamaCard = document.getElementById('daily-pranayama-card');
+
+      const cardTitle = document.getElementById('practice-card-title');
+      const durationPill = document.getElementById('practice-duration-pill');
+      const phase2Bar = document.getElementById('phase2-sequence-bar');
+      const lockedHint = document.getElementById('phase2-locked-hint');
+      const stepLabel = document.getElementById('practice-step-label');
+
+      const isPhase2 = state.streakDays >= GOAL_DAYS;
+
+      if (cardTitle) {
+        cardTitle.textContent = isPhase2 ? 'Phase 2 Sadhana' : 'Daily Pranayama';
+      }
+      if (phase2Bar) {
+        phase2Bar.classList.toggle('hidden', !isPhase2 || state.erikCompleted);
+      }
+      if (lockedHint) {
+        lockedHint.classList.toggle('hidden', isPhase2);
+      }
+      if (stepLabel) {
+        stepLabel.textContent = isPhase2
+          ? PHASE2_STEPS[state.phase2StepIndex].label
+          : 'Short SKY Kriya';
+      }
+
+      if (isPhase2) {
+        [0, 1, 2].forEach(i => {
+          const btn = document.getElementById(`p2-step-${i}`);
+          if (!btn) return;
+          btn.className = i === state.phase2StepIndex
+            ? 'wf-btn py-1.5 px-1 rounded-lg border-2 border-black bg-black text-white text-[10px] font-bold leading-tight'
+            : 'wf-btn py-1.5 px-1 rounded-lg border border-black bg-neutral-50 text-black text-[10px] font-semibold leading-tight';
+        });
+      }
+
+      if (focusBackdrop && pranayamaCard) {
+        if (state.isPlaying) {
+          focusBackdrop.classList.remove('hidden');
+          pranayamaCard.classList.add('z-30', 'shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_16px_40px_rgba(0,0,0,0.85)]');
+        } else {
+          focusBackdrop.classList.add('hidden');
+          pranayamaCard.classList.remove('z-30', 'shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_16px_40px_rgba(0,0,0,0.85)]');
+        }
+      }
+
+      if (timerEl) {
+        timerEl.textContent = formatTime(state.secondsRemaining);
+      }
+
+      if (scrubberFill) {
+        const totalDur = state.activeStepDuration || TOTAL_PRACTICE_SECONDS;
+        const elapsed = totalDur - state.secondsRemaining;
+        const pct = Math.max(0, Math.min(100, (elapsed / totalDur) * 100));
+        scrubberFill.style.width = `${pct}%`;
+      }
+
+      if (iconPlay && iconPause) {
+        if (state.isPlaying) {
+          iconPlay.classList.add('hidden');
+          iconPause.classList.remove('hidden');
+        } else {
+          iconPlay.classList.remove('hidden');
+          iconPause.classList.add('hidden');
+        }
+      }
+
+      if (pendingView && completedView && statusBadge) {
+        if (state.erikCompleted) {
+          pendingView.classList.add('hidden');
+          completedView.classList.remove('hidden');
+          statusBadge.textContent = 'Completed';
+          statusBadge.className = 'text-[10px] font-mono-tech uppercase px-2 py-0.5 border border-black rounded-md bg-black text-white font-semibold';
+          if (sourceLabel) {
+            if (isPhase2) {
+              sourceLabel.textContent = state.completionSource === 'audio'
+                ? 'Phase 2 sequence completed'
+                : 'Phase 2 logged offline';
+            } else {
+              sourceLabel.textContent = state.completionSource === 'audio'
+                ? 'Completed via 20m audio'
+                : 'Completed offline';
+            }
+          }
+        } else {
+          pendingView.classList.remove('hidden');
+          completedView.classList.add('hidden');
+          statusBadge.textContent = isPhase2 ? 'Phase 2' : 'Pending';
+          statusBadge.className = isPhase2
+            ? 'text-[10px] font-mono-tech uppercase px-2 py-0.5 border border-black rounded-md bg-black text-white font-bold'
+            : 'text-[10px] font-mono-tech uppercase px-2 py-0.5 border border-black rounded-md bg-neutral-100 text-black font-medium';
+        }
+      }
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'bg-black text-white text-xs font-medium px-3.5 py-2 rounded-xl border border-black shadow-[3px_3px_0px_0px_rgba(161,161,170,1)] transition-all duration-200 opacity-0 translate-y-[-6px] text-center max-w-[320px]';
+      toast.textContent = message;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-[-6px]');
+        toast.classList.add('opacity-100', 'translate-y-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-[-6px]');
+        setTimeout(() => toast.remove(), 220);
+      }, 2400);
+    }
+
+    function renderAll() {
+      updateTabUI();
+      updatePlayerUI();
+      renderUnifiedSangha();
+      renderStreakGrid();
+      updateBlessingsUI();
+      renderSevaView();
+    }
+
+    function switchTab(tabName) {
+      if (state.isPlaying && tabName === 'seva') {
+        pauseAudio();
+      }
+      state.activeTab = tabName;
+      updateTabUI();
+    }
+
+    function updateTabUI() {
+      const sadhanaView = document.getElementById('view-sadhana');
+      const sevaView = document.getElementById('view-seva');
+      const sadhanaBtn = document.getElementById('tab-btn-sadhana');
+      const sevaBtn = document.getElementById('tab-btn-seva');
+      const inviteDot = document.getElementById('seva-invite-dot');
+
+      if (!sadhanaView || !sevaView || !sadhanaBtn || !sevaBtn) return;
+
+      const hasPendingInvites = state.seva.invites.some(inv => inv.status === 'pending');
+
+      if (state.activeTab === 'seva') {
+        sadhanaView.classList.add('hidden');
+        sevaView.classList.remove('hidden');
+
+        sadhanaBtn.className = 'wf-btn py-1.5 px-3 rounded-lg text-xs font-semibold tracking-tight text-neutral-700 hover:text-black transition';
+        sevaBtn.className = 'wf-btn py-1.5 px-3 rounded-lg text-xs font-bold tracking-tight bg-black text-white flex items-center justify-center gap-1.5 transition';
+        if (inviteDot) {
+          inviteDot.className = hasPendingInvites ? 'w-1.5 h-1.5 rounded-full bg-white' : 'hidden';
+        }
+      } else {
+        sevaView.classList.add('hidden');
+        sadhanaView.classList.remove('hidden');
+
+        sadhanaBtn.className = 'wf-btn py-1.5 px-3 rounded-lg text-xs font-bold tracking-tight bg-black text-white transition';
+        sevaBtn.className = 'wf-btn py-1.5 px-3 rounded-lg text-xs font-semibold tracking-tight text-neutral-700 hover:text-black flex items-center justify-center gap-1.5 transition';
+        if (inviteDot) {
+          inviteDot.className = hasPendingInvites ? 'w-1.5 h-1.5 rounded-full bg-black' : 'hidden';
+        }
+      }
+    }
+
+    function toggleSevaSkill(skillId) {
+      const idx = state.seva.selectedSkills.indexOf(skillId);
+      if (idx > -1) {
+        state.seva.selectedSkills.splice(idx, 1);
+      } else {
+        state.seva.selectedSkills.push(skillId);
+      }
+      renderSevaView();
+    }
+
+    function updateOtherSevaText(val) {
+      state.seva.otherText = val;
+      renderAdminPreview();
+    }
+
+    function respondToSevaInvite(inviteId, decision) {
+      const invite = state.seva.invites.find(i => i.id === inviteId);
+      if (!invite) return;
+
+      invite.status = decision;
+      renderSevaView();
+      updateTabUI();
+
+      if (decision === 'accepted') {
+        showToast(`Accepted: ${invite.title}`);
+      } else if (decision === 'declined') {
+        showToast(`Declined: ${invite.title}`);
+      }
+    }
+
+    function sendSimulatedInvite() {
+      const activeLabels = state.seva.selectedSkills
+        .map(id => SEVA_SKILL_OPTIONS.find(o => o.id === id))
+        .filter(Boolean);
+
+      const chosenRole = activeLabels.length > 0
+        ? activeLabels[activeLabels.length - 1].label
+        : 'Room Setup';
+
+      const newId = `inv-${Date.now()}`;
+      state.seva.invites.unshift({
+        id: newId,
+        title: `Sunday Happiness Program • ${chosenRole}`,
+        from: 'Rick (Volunteer Lead)',
+        when: 'Sun, Nov 22 • 9:30 AM',
+        location: 'Downtown Art of Living Hall, Vancouver',
+        status: 'pending'
+      });
+
+      renderSevaView();
+      updateTabUI();
+      showToast(`New Seva invite received for ${chosenRole}!`);
+    }
+
+    function renderSevaView() {
+      const vtpBadge = document.getElementById('profile-vtp-badge');
+      const hasVtp = state.seva.selectedSkills.includes('vtp');
+      if (vtpBadge) {
+        vtpBadge.classList.toggle('hidden', !hasVtp);
+      }
+
+      const invitesList = document.getElementById('seva-invites-list');
+      const invitesBadge = document.getElementById('invites-count-badge');
+      const pendingCount = state.seva.invites.filter(i => i.status === 'pending').length;
+
+      if (invitesBadge) {
+        invitesBadge.textContent = pendingCount > 0 ? `${pendingCount} PENDING` : 'ALL CAUGHT UP';
+        invitesBadge.className = pendingCount > 0
+          ? 'text-[10px] font-mono-tech font-bold px-2 py-0.5 border border-black rounded-full bg-black text-white'
+          : 'text-[10px] font-mono-tech font-bold px-2 py-0.5 border border-black rounded-full bg-neutral-100 text-neutral-600';
+      }
+
+      if (invitesList) {
+        invitesList.innerHTML = '';
+        state.seva.invites.forEach(invite => {
+          const card = document.createElement('div');
+          card.className = 'border border-black rounded-xl p-3 bg-neutral-50';
+
+          let actionHtml = '';
+          if (invite.status === 'pending') {
+            actionHtml = `
+              <div class="grid grid-cols-2 gap-2 mt-2.5">
+                <button onclick="respondToSevaInvite('${invite.id}', 'accepted')" class="wf-btn py-1.5 px-3 rounded-lg bg-black text-white text-xs font-semibold">
+                  Accept
+                </button>
+                <button onclick="respondToSevaInvite('${invite.id}', 'declined')" class="wf-btn py-1.5 px-3 rounded-lg border border-black bg-white text-black text-xs font-semibold hover:bg-neutral-100">
+                  Decline
+                </button>
+              </div>
+            `;
+          } else {
+            const isAccepted = invite.status === 'accepted';
+            actionHtml = `
+              <div class="mt-2 pt-2 border-t border-neutral-200 flex items-center justify-between">
+                <span class="text-[11px] font-mono-tech font-bold ${isAccepted ? 'text-black' : 'text-neutral-500'}">
+                  ${isAccepted ? '✓ Confirmed for Seva' : '✕ Declined'}
+                </span>
+                <button onclick="respondToSevaInvite('${invite.id}', 'pending')" class="text-[10px] font-mono-tech underline text-neutral-500 hover:text-black">
+                  Change
+                </button>
+              </div>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs font-bold text-black">${invite.title}</p>
+                <p class="text-[10px] font-mono-tech text-neutral-600 mt-0.5">${invite.from} • ${invite.when}</p>
+                <p class="text-[10px] font-mono-tech text-neutral-700 mt-0.5 flex items-center gap-1">
+                  <svg class="w-3 h-3 shrink-0 text-black" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-6-5.373-6-10a6 6 0 1112 0c0 4.627-6 10-6 10z"/>
+                    <circle cx="12" cy="11" r="2"/>
+                  </svg>
+                  <span>${invite.location}</span>
+                </p>
+              </div>
+            </div>
+            ${actionHtml}
+          `;
+          invitesList.appendChild(card);
+        });
+      }
+
+      const skillsGrid = document.getElementById('seva-skills-grid');
+      const selectedCountEl = document.getElementById('seva-selected-count');
+      const otherWrapper = document.getElementById('seva-other-wrapper');
+      const otherInput = document.getElementById('seva-other-input');
+
+      if (selectedCountEl) {
+        selectedCountEl.textContent = `${state.seva.selectedSkills.length} Selected`;
+      }
+
+      if (skillsGrid) {
+        skillsGrid.innerHTML = '';
+        let lastGroup = null;
+        SEVA_SKILL_OPTIONS.forEach(option => {
+          const isChecked = state.seva.selectedSkills.includes(option.id);
+          if (option.group !== lastGroup) {
+            lastGroup = option.group;
+            const h = document.createElement('div');
+            h.className = 'text-[10px] font-mono-tech uppercase tracking-wider text-neutral-500 font-semibold pt-2 first:pt-0';
+            h.textContent = option.group;
+            skillsGrid.appendChild(h);
+          }
+          const row = document.createElement('button');
+          row.type = 'button';
+          row.onclick = () => toggleSevaSkill(option.id);
+          row.className = `wf-btn w-full text-left px-3 py-2 rounded-xl border transition flex items-center justify-between gap-2 ${
+            isChecked
+              ? 'border-2 border-black bg-neutral-100 text-black'
+              : 'border-neutral-300 bg-white text-neutral-700 hover:border-black'
+          }`;
+
+          row.innerHTML = `
+            <div class="flex items-baseline gap-1.5 min-w-0 flex-1">
+              <span class="text-xs font-bold text-black shrink-0">${option.label}</span>
+              ${option.isNew ? '<span class="text-[8px] font-mono-tech font-bold uppercase px-1 border border-black rounded shrink-0" style="background:var(--gold-soft)">New</span>' : ''}
+              <span class="text-[10px] text-neutral-500 truncate">• ${option.hint}</span>
+            </div>
+            <div class="w-4 h-4 rounded border border-black flex items-center justify-center shrink-0 ${
+              isChecked ? 'bg-black text-white' : 'bg-white'
+            }">
+              ${isChecked ? '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+            </div>
+          `;
+          skillsGrid.appendChild(row);
+        });
+      }
+
+      const isOtherChecked = state.seva.selectedSkills.includes('other');
+      if (otherWrapper) {
+        otherWrapper.classList.toggle('hidden', !isOtherChecked);
+      }
+      if (otherInput && otherInput.value !== state.seva.otherText) {
+        otherInput.value = state.seva.otherText;
+      }
+
+      renderAdminPreview();
+    }
+
+    function renderAdminPreview() {
+      const tagsContainer = document.getElementById('admin-matched-tags');
+
+      if (!tagsContainer) return;
+      tagsContainer.innerHTML = '';
+
+      if (state.seva.selectedSkills.length === 0) {
+        tagsContainer.innerHTML = '<span class="text-[10px] font-mono-tech text-neutral-400">No Seva roles selected yet</span>';
+        return;
+      }
+
+      state.seva.selectedSkills.forEach(id => {
+        const option = SEVA_SKILL_OPTIONS.find(o => o.id === id);
+        if (!option) return;
+
+        let tagLabel = option.label;
+        if (id === 'other' && state.seva.otherText.trim()) {
+          tagLabel = `Other: ${state.seva.otherText.trim()}`;
+        }
+
+        const pill = document.createElement('span');
+        pill.className = 'text-[10px] font-mono-tech font-semibold px-2 py-0.5 border border-black rounded-md bg-neutral-50 text-black';
+        pill.textContent = tagLabel;
+        tagsContainer.appendChild(pill);
+      });
+    }
+
+    function resetDemo() {
+      if (state.isPlaying) pauseAudio();
+      pendingWisdomFlow = false;
+      closeBlessingsModal(true);
+      closeWisdomModal(true);
+      state = JSON.parse(JSON.stringify(defaultState));
+      renderAll();
+      showToast('Demo state reset.');
+    }
+
+    window.switchTab = switchTab;
+    window.toggleSevaSkill = toggleSevaSkill;
+    window.updateOtherSevaText = updateOtherSevaText;
+    window.respondToSevaInvite = respondToSevaInvite;
+    window.sendSimulatedInvite = sendSimulatedInvite;
+    window.openMp3Picker = openMp3Picker;
+    window.handleMp3FileSelected = handleMp3FileSelected;
+    window.toggleAudio = toggleAudio;
+    window.scrubAudio = scrubAudio;
+    window.completePractice = completePractice;
+    window.openBlessingsModal = openBlessingsModal;
+    window.closeBlessingsModal = closeBlessingsModal;
+    window.openWisdomModal = openWisdomModal;
+    window.closeWisdomModal = closeWisdomModal;
+    window.revertCompletion = revertCompletion;
+    window.toggleYesterdayPopover = toggleYesterdayPopover;
+    window.selectMemberNode = selectMemberNode;
+    window.sendBlessings = sendBlessings;
+    window.showToast = showToast;
+    window.selectPhase2Step = selectPhase2Step;
+    window.jumpToDay39Demo = jumpToDay39Demo;
+    window.resetDemo = resetDemo;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setupMp3AudioListeners();
+        renderAll();
+      });
+    } else {
+      setupMp3AudioListeners();
+      renderAll();
+    }
+  </script>
+</body>
+</html>
